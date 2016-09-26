@@ -1,4 +1,5 @@
 #include "SDL.h"
+#include "type.h"
 
 int main ( int argc, char *argv[] )
 {
@@ -6,7 +7,7 @@ int main ( int argc, char *argv[] )
   SDL_Init(SDL_INIT_VIDEO);
 
   /* set the title bar */
-  SDL_WM_SetCaption("SDL Test", "SDL Test");
+  SDL_WM_SetCaption("Student versus Zombie", "Student versus Zombie");
 
   /* create window */
   SDL_Surface* screen = SDL_SetVideoMode(640, 480, 0, 0);
