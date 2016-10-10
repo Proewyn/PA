@@ -15,12 +15,14 @@ typedef struct student{
   float rate_of_fire;
   int cost;
   int health;
+  float speed;
+  int range;
+  double posx;
 }student;
 
 typedef struct zombie{
   float rate_of_fire;
   int health;
-  float speed;
   int damage;
   int range;
   double posx;
@@ -36,7 +38,6 @@ typedef struct projectile{
 typedef struct square{
   bool hidden=false;
   bool occupied=false;
-  student dude;
 }square;
   
 typedef struct level{
