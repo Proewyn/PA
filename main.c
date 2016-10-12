@@ -34,8 +34,12 @@ int main ( int argc, char *argv[] )
             case SDLK_q:
               gameover = 1;
               break;
+	  default:
+	    break;
           }
           break;
+      default:
+	break;
       }
     }
 

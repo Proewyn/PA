@@ -19,7 +19,7 @@ typedef struct student{
   float speed;
   int range;
   double posx;
-  int posy
+  int posy;
 }student;
 
 typedef struct zombie{
@@ -38,8 +38,8 @@ typedef struct projectile{
 }projectile;
 
 typedef struct square{
-  bool obstacle=false;
-  bool occupied=false;
+  bool obstacle; //must init both of them in a function
+  bool occupied;
   zombie z;
 }square;
   
@@ -48,5 +48,19 @@ typedef struct level{
   student student_tab[100];
   projectile projectile_tab[50];
 }level;
+
+/*declaration of function*/
+
+zombie init_default_zombie();
+square init__default_square();
+int in_range(student s, level level);
+int impact(projectile p, level l);
+void summon_student(student summon, level *level);
+void launch_projectile(projectile p,level *level);
+void suppr_projectile(int num_projectile, level *level);
+void suppr_student(int num_student,level *level);
+void move_student(level *level);
+void suppr_zombie(int X, int Y, level *level);
+
   
 #endif
