@@ -94,6 +94,31 @@ void move_student(level *level){
   }
 }
 
+void attack(int attacker, int x, level *level){
+  int result;
+  
+  result = level->field[level->student_tab[attacker].posy][x].z.health - level->student_tab[attacker].damage;
+  if (result <= 0){
+    suppr_zombie(int x, int attacker, level level);
+  }
+  else{
+    level->field[level->student_tab[attacker].posy][x]z.health = result;
+  }
+}
+
+void attack_z(int defender, int x, int y, level* level){
+  int result;
+  
+  result = level->field[y][x].z.damage - level->student_tab[defender].health;
+  if (result <= 0){
+    suppr_student(int defender, level level);
+  }
+  else{
+    level->student_tab[defender].health = result;
+  }
+}
+
+
 void suppr_zombie(int X, int Y, level *level){
   level->field[Y][X].z=init_default_zombie(); //default zombie is dead zombie
 }

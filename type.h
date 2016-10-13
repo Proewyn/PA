@@ -60,6 +60,8 @@ void launch_projectile(projectile p,level *level);
 void suppr_projectile(int num_projectile, level *level);
 void suppr_student(int num_student,level *level);
 void move_student(level *level);
+void attack(student *attacker, int X, level *level);
+void attack_z(student *defender, int X, level *level);
 void suppr_zombie(int X, int Y, level *level);
 
   
