@@ -4,6 +4,8 @@
 #include "SDL.h"
 #include <math.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 
 #define FIELD_X 15
@@ -11,7 +13,11 @@
 
 /*structures*/
 
-typedef struct student{
+typedef struct input{
+  char key[SDLK_LAST+1];
+}Input;
+
+typedef struct Student{
   float rate_of_fire;
   int cost;
   int health;
@@ -22,14 +28,14 @@ typedef struct student{
   int posy;
 }student;
 
-typedef struct zombie{
+typedef struct Zombie{
   float rate_of_fire;
   int health;
   int damage;
   int range;
 }zombie;
 
-typedef struct projectile{
+typedef struct Projectile{
   float speed;
   double posx;
   int posy;
@@ -37,13 +43,13 @@ typedef struct projectile{
   int effect;
 }projectile;
 
-typedef struct square{
+typedef struct Square{
   bool obstacle; //must init both of them in a function
   bool occupied;
   zombie z;
 }square;
   
-typedef struct level{
+typedef struct Level{
   square field[FIELD_Y][FIELD_X];
   student student_tab[100];
   projectile projectile_tab[50];
@@ -51,6 +57,7 @@ typedef struct level{
 
 /*declaration of function*/
 
+void UpdateEvents(Input *in);
 zombie init_default_zombie();
 square init__default_square();
 int in_range(student s, level level);
@@ -60,9 +67,10 @@ void launch_projectile(projectile p,level *level);
 void suppr_projectile(int num_projectile, level *level);
 void suppr_student(int num_student,level *level);
 void move_student(level *level);
-void attack(student *attacker, int X, level *level);
-void attack_z(student *defender, int X, level *level);
 void suppr_zombie(int X, int Y, level *level);
+void attack(int attacker, int X, level *level);
+void attack_z(int defender, int X, int Y, level *level);
+
 
   
 #endif

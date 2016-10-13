@@ -1,54 +1,26 @@
 #include "SDL.h"
 #include "type.h"
 
-int main ( int argc, char *argv[] )
+int main ()
 {
-  /* initialize SDL */
   SDL_Init(SDL_INIT_VIDEO);
-
-  /* set the title bar */
   SDL_WM_SetCaption("Student versus Zombie", "Student versus Zombie");
-
-  /* create window */
   SDL_Surface* screen = SDL_SetVideoMode(640, 480, 0, 0);
 
-  SDL_Event event;
-  int gameover = 0;
+  Input in;
+  memset(&in, 0, sizeof(in));
 
-  /* message pump */
-  while (!gameover)
-  {
-    /* look for an event */
-    if (SDL_PollEvent(&event)) {
-      /* an event was found */
-      switch (event.type) {
-        /* close button clicked */
-        case SDL_QUIT:
-          gameover = 1;
-          break;
-
-        /* handle the keyboard */
-        case SDL_KEYDOWN:
-          switch (event.key.keysym.sym) {
-            case SDLK_ESCAPE:
-            case SDLK_q:
-              gameover = 1;
-              break;
-	  default:
-	    break;
-          }
-          break;
-      default:
-	break;
-      }
+  while (!in.key[SDLK_LAST]){
+    UpdateEvents(&in);
+    handle
+    if (in.key[SDLK_ESCAPE]){
+      in.key[SDLK_LAST] = 1;
     }
-
-    /* update the screen */
-    SDL_UpdateRect(screen, 0, 0, 0, 0);
   }
-
-  /* cleanup SDL */
+  
+  SDL_UpdateRect(screen, 0, 0, 0, 0);
+  
   SDL_Quit();
-
+  
   return 0;
 }
