@@ -15,6 +15,9 @@
 
 typedef struct input{
   char key[SDLK_LAST+1];
+  int mousex, mousey;
+  char mousebuttons[8];
+  char quit;
 }Input;
 
 typedef struct Student{
@@ -58,6 +61,7 @@ typedef struct Level{
 /*declaration of function*/
 
 void UpdateEvents(Input *in);
+void HandleEvents(Input *in);
 zombie init_default_zombie();
 square init__default_square();
 int in_range(student s, level level);
@@ -72,5 +76,4 @@ void attack(int attacker, int X, level *level);
 void attack_z(int defender, int X, int Y, level *level);
 
 
-  
 #endif

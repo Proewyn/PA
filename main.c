@@ -17,16 +17,15 @@ int main ()
 {
   SDL_Init(SDL_INIT_VIDEO);
   SDL_WM_SetCaption("Student versus Zombie", "Student versus Zombie");
-  SDL_Surface* screen = SDL_SetVideoMode(1920, 1080, 0, 0);
+  SDL_Surface* screen = SDL_SetVideoMode(1080, 630, 0, 0);
   SDL_Surface *temp;
 
 /*grass init*/
-  rcgrass.x=10;
-  rcgrass.y=50;
-
+  rcgrass.x=90;
+  rcgrass.y=90;
 
 /*load grass img*/
- temp=SDL_LoadBMP("fond2.bmp");
+ temp=SDL_LoadBMP("fond3.bmp");
  grass=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
@@ -38,29 +37,21 @@ int main ()
   memset(&in, 0, sizeof(in));
 
 
-
-  while (!in.key[SDLK_LAST]){
+  while (!in.key[SDLK_LAST] && !in.quit){
     UpdateEvents(&in);
-    if (in.key[SDLK_ESCAPE]){
-      in.key[SDLK_LAST] = 1;
-    }
-
-
-
-
-
+    HandleEvents(&in);
+    
     /*draw the grass*/
     SDL_BlitSurface(grass,NULL,screen,&rcgrass);
-  
-  
-  
-  SDL_UpdateRect(screen, 0, 0, 0, 0);
-
+    
+    
+    
+    SDL_UpdateRect(screen, 0, 0, 0, 0);
   }
   
-
+  
   
   SDL_Quit();
   
-  return 0;
+  return EXIT_SUCCESS;
 }

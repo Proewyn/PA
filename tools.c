@@ -17,7 +17,30 @@ void UpdateEvents(Input* in)
     case SDL_KEYUP:
       in->key[event.key.keysym.sym]=0;
       break;
+    case SDL_MOUSEMOTION:
+      in->mousex=event.motion.x;
+      in->mousey=event.motion.y;
+      break;
+    case SDL_MOUSEBUTTONDOWN:
+      in->mousebuttons[event.button.button]=1;
+      break;
+    case SDL_MOUSEBUTTONUP:
+      in->mousebuttons[event.button.button]=0;
+      break;
+    case SDL_QUIT:
+      in->quit=1;
+      break;
     }
+  }
+}
+
+void HandleEvents(Input *in){
+  if (in->key[SDLK_ESCAPE]){
+    in->key[SDLK_LAST] = 1;
+  }
+  if (in->mousebuttons[1]){
+    in->mousebuttons[1]=0;
+    printf("%d %d\n", in->mousex, in->mousey);
   }
 }
 
