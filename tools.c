@@ -171,3 +171,22 @@ void attack_z(int defender, int X, int Y, level* level){
     level->student_tab[defender].health = result;
   }
 }
+
+void init_level(level *level){
+  int i,j;
+  FILE* fichier = NULL;
+  char chaine[3]="";
+  fichier = fopen("level1.txt", "r");
+
+  if (fichier != NULL){
+    for(j=0;j<5;j++){
+      for(i=0;i<10;i++){
+	fgets(chaine,3,fichier);
+	level->field[j][i].obstacle=(int)chaine[0];
+	level->field[j][i].occupied=(int)chaine[1];
+	level->field[j][i].z.type=(int)chaine[2];
+      }
+    }
+  }
+  fclose(fichier);
+}

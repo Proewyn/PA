@@ -74,5 +74,5 @@ void move_student(level *level);
 void suppr_zombie(int X, int Y, level *level);
 void attack(int attacker, int X, level *level);
 void attack_z(int defender, int X, int Y, level *level);
-
+void init_level(level *level);
 #endif
