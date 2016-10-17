@@ -1,5 +1,5 @@
 pvz:	main.c
-	gcc -Wall -Wextra -g  main.c tools.c `sdl-config --cflags --libs` -lm -o pvz
+	gcc -Wall -Wextra -g  main.c tools.c `sdl-config --cflags --libs` -lm -o svz
 
 clean:
-	rm pvz
+	rm svz

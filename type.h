@@ -32,6 +32,7 @@ typedef struct Student{
 }student;
 
 typedef struct Zombie{
+  int type;
   float rate_of_fire;
   int health;
   int damage;
@@ -74,6 +75,6 @@ void move_student(level *level);
 void suppr_zombie(int X, int Y, level *level);
 void attack(int attacker, int X, level *level);
 void attack_z(int defender, int X, int Y, level *level);
-
+void summon_zombie (int X, int Y, zombie z, level *level);
 
 #endif

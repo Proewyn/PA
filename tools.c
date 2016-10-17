@@ -46,6 +46,7 @@ void HandleEvents(Input *in){
 
 zombie init_default_zombie(){
   zombie z;
+  z.type=0;
   z.rate_of_fire=0;
   z.health=0;
   z.damage=0;
@@ -165,4 +166,7 @@ void attack_z(int defender, int X, int Y, level* level){
 }
   
 
-  
+void summon_zombie (int X, int Y, zombie z, level *level){
+  level->field[Y][X].z=z;
+}
+
