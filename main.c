@@ -29,19 +29,20 @@ int main ()
  grass=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
-/*init zombie base*/
- rczombie_base.x=0;
- rczombie_base.y=0;
-
-/*load zombie base*/
+/*load monster*/
  temp=SDL_LoadBMP("zombie.bmp");
  zombie_tab[1]=SDL_DisplayFormat(temp);
+ SDL_FreeSurface(temp);
+
+ temp=SDL_LoadBMP("lich.bmp");
+ zombie_tab[2]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
 
 
  colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
  SDL_SetColorKey(zombie_tab[1], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+ SDL_SetColorKey(zombie_tab[2], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
 
   Input in;
   memset(&in, 0, sizeof(in));
@@ -59,7 +60,7 @@ int main ()
 	draw.x = 80+j*90;
 	draw.y = 50+i*90;
 	//if (zombie_tab[level.field[j][i].z.type] > 0){
-	SDL_BlitSurface(zombie_tab[1], NULL, screen, &draw);
+	SDL_BlitSurface(zombie_tab[2], NULL, screen, &draw);
       }
     }
     

@@ -44,26 +44,33 @@ void HandleEvents(Input *in){
   }
 }
 
-zombie init_default_zombie(){
-  zombie z;
-  z.type=0;
-  z.rate_of_fire=0;
-  z.health=0;
-  z.damage=0;
-  z.range=0;
-  
-  return z;
+void init_zombie(level *l){
+
+  int i, j;
+
+  for (j=0;j<=9;j++){
+    for (i=0;i<=4;i++){
+      if (l->field[j][i].z.type == 0){
+	l->field[j][i].z.rate_of_fire=0;
+	l->field[j][i].z.health=0;
+	l->field[j][i].z.damage=0;
+	l->field[j][i].z.range=0;
+      }
+      else if (l->field[FIELD_Y][FIELD_X].z.type == 1){
+	l->field[j][i].z.rate_of_fire=2;
+	l->field[j][i].z.health=20;
+	l->field[j][i].z.damage=3;
+	l->field[j][i].z.range=1;
+      }
+      else if (l->field[FIELD_Y][FIELD_X].z.type == 2){
+	l->field[j][i].z.rate_of_fire=3;
+	l->field[j][i].z.health=10;
+	l->field[j][i].z.damage=3;
+	l->field[j][i].z.range=3;
+      }
+    }
+  }
 }
-
-square init_default_square(){
-  square s;
-  s.obstacle=false; 
-  s.occupied=false; 
-  s.z=init_default_zombie();   
-
-  return s;
-}
-
 
 
 int in_range(student s,level level){
@@ -138,7 +145,7 @@ void move_student(level *level){
 }
 
 void suppr_zombie(int X, int Y, level *level){
-  level->field[Y][X].z=init_default_zombie(); //default zombie is dead zombie
+  level->field[Y][X].z.type=0; //zombie 0 is dead zombie
 }
 
 void attack(int attacker, int X, level *level){
@@ -164,9 +171,3 @@ void attack_z(int defender, int X, int Y, level* level){
     level->student_tab[defender].health = result;
   }
 }
-  
-
-void summon_zombie (int X, int Y, zombie z, level *level){
-  level->field[Y][X].z=z;
-}
-
