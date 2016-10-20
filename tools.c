@@ -175,16 +175,17 @@ void attack_z(int defender, int X, int Y, level* level){
 void init_level(level *level){
   int i,j;
   FILE* fichier = NULL;
-  char chaine[3]="";
+  //char chaine[3]="";
   fichier = fopen("level1.txt", "r");
+  int trash;
 
   if (fichier != NULL){
     for(j=0;j<5;j++){
-      for(i=0;i<10;i++){
-	fgets(chaine,3,fichier);
-	level->field[j][i].obstacle=(int)chaine[0];
-	level->field[j][i].occupied=(int)chaine[1];
-	level->field[j][i].z.type=(int)chaine[2];
+      for(i=0;i<10;i++){;
+	level->field[i][j].obstacle=fgetc(fichier)-48; //-48 valeur ASCII=>int
+	level->field[i][j].occupied=fgetc(fichier)-48;
+	level->field[i][j].z.type=fgetc(fichier)-48;
+	trash=fgetc(fichier); // récupére les \n et fais avancer le curseur à la ligne suivante
       }
     }
   }

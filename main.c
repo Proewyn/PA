@@ -11,6 +11,7 @@ SDL_Rect rcgrass, rcstudent_base,rcstudent_baserc, rczombie_base, rczombie_baser
 
 int colorkey, i, j;
 
+level current_level;
 
 
 int main ()
@@ -38,7 +39,7 @@ int main ()
  zombie_tab[2]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
-
+ init_level(&current_level);
 
  colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
  SDL_SetColorKey(zombie_tab[1], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
@@ -55,12 +56,13 @@ int main ()
     /*draw*/
     SDL_BlitSurface(grass,NULL,screen,&rcgrass);
 
-    for (j=0;j<=9;j++){
-      for (i=0;i<=4;i++){
-	draw.x = 80+j*90;
-	draw.y = 50+i*90;
-	//if (zombie_tab[level.field[j][i].z.type] > 0){
-	SDL_BlitSurface(zombie_tab[2], NULL, screen, &draw);
+    for (j=0;j<5;j++){
+      for (i=0;i<10;i++){
+	draw.x = 80+i*90;
+	draw.y = 50+j*90;
+	if (current_level.field[i][j].z.type > 0){
+	  SDL_BlitSurface(zombie_tab[current_level.field[i][j].z.type], NULL, screen, &draw); 
+	}
       }
     }
     

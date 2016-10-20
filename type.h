@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#define FIELD_X 15
+#define FIELD_X 10
 #define FIELD_Y 5
 
 /*structures*/
