@@ -1,6 +1,8 @@
 #include "type.h"
 
 int highlight_menu;
+bool is_select=false;
+level current_level;
 
 
 void UpdateEvents(Input* in)
@@ -40,7 +42,28 @@ void HandleEvents(Input *in){
   }
   if (in->mousebuttons[1]){
     in->mousebuttons[1]=0;
-    highlight_menu = num_student_menu(in->mousex);
+    if (in->mousey < 180){
+      highlight_menu = num_student_menu(in->mousex);
+      if (highlight_menu != 0){
+	is_select = true;
+      }
+    }
+    else{
+      if (is_select){
+	student student_temp;
+	if (highlight_menu == 1){
+	  student_temp.rate_of_fire = 1;
+	  student_temp.cost = 10;
+	  student_temp.health = 15;
+	  student_temp.damage = 2;
+	  student_temp.speed = 1;
+	  student_temp.range = 1;
+	  student_temp.posx = (double)num_case_x(in->mousex);
+	  student_temp.posy = num_case_y(in->mousey);
+	  summon_student(student_temp, &current_level);
+	}  
+      }
+    }
     printf("%d %d\n", in->mousex, in->mousey);
   }
 }
@@ -196,9 +219,10 @@ void init_level(level *level){
 int num_student_menu(int posX){
   int i;
 
-  for(i=1;i<=1;i++)
+  for(i=1;i<=1;i++){
     if (posX>(90*(i+1)) && posX<(90*(i+2))){
-	  return i;
+      return i;
+    }
   }
   return 0;
 }
