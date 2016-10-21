@@ -1,6 +1,6 @@
 #include "type.h"
 
-
+int highlight_menu;
 
 
 void UpdateEvents(Input* in)
@@ -40,6 +40,7 @@ void HandleEvents(Input *in){
   }
   if (in->mousebuttons[1]){
     in->mousebuttons[1]=0;
+    highlight_menu = num_student_menu(in->mousex);
     printf("%d %d\n", in->mousex, in->mousey);
   }
 }
@@ -193,6 +194,8 @@ void init_level(level *level){
 }
 
 int num_student_menu(int posX){
+  int i;
+
   for(i=1;i<=1;i++)
     if (posX>(90*(i+1)) && posX<(90*(i+2))){
 	  return i;
