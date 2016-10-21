@@ -191,3 +191,12 @@ void init_level(level *level){
   }
   fclose(fichier);
 }
+
+int num_student_menu(int posX){
+  for(i=1;i<=1;i++)
+    if (posX>(90*(i+1)) && posX<(90*(i+2))){
+	  return i;
+  }
+  return 0;
+}
+
