@@ -76,4 +76,6 @@ void attack(int attacker, int X, level *level);
 void attack_z(int defender, int X, int Y, level *level);
 void init_level(level *level);
 int num_student_menu(int posX);
+int num_case_x(int posX);
+int num_case_y(int posY);
 #endif

@@ -203,3 +203,10 @@ int num_student_menu(int posX){
   return 0;
 }
 
+int num_case_x(int posX){
+  return (int)(posX-90)/90;
+}
+
+int num_case_y(int posY){
+  return (int)(posY-180)/90;
+}
