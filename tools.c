@@ -68,29 +68,29 @@ void HandleEvents(Input *in){
   }
 }
 
-void init_zombie(level *l){
+void init_zombie(){
 
   int i, j;
 
   for (j=0;j<=9;j++){
     for (i=0;i<=4;i++){
-      if (l->field[j][i].z.type == 0){
-	l->field[j][i].z.rate_of_fire=0;
-	l->field[j][i].z.health=0;
-	l->field[j][i].z.damage=0;
-	l->field[j][i].z.range=0;
+      if (current_level.field[j][i].z.type == 0){
+	current_level.field[j][i].z.rate_of_fire=0;
+	current_level.field[j][i].z.health=0;
+	current_level.field[j][i].z.damage=0;
+	current_level.field[j][i].z.range=0;
       }
-      else if (l->field[FIELD_Y][FIELD_X].z.type == 1){
-	l->field[j][i].z.rate_of_fire=2;
-	l->field[j][i].z.health=20;
-	l->field[j][i].z.damage=3;
-	l->field[j][i].z.range=1;
+      else if (current_level.field[FIELD_Y][FIELD_X].z.type == 1){
+	current_level.field[j][i].z.rate_of_fire=2;
+	current_level.field[j][i].z.health=20;
+	current_level.field[j][i].z.damage=3;
+	current_level.field[j][i].z.range=1;
       }
-      else if (l->field[FIELD_Y][FIELD_X].z.type == 2){
-	l->field[j][i].z.rate_of_fire=3;
-	l->field[j][i].z.health=10;
-	l->field[j][i].z.damage=3;
-	l->field[j][i].z.range=3;
+      else if (current_level.field[FIELD_Y][FIELD_X].z.type == 2){
+	current_level.field[j][i].z.rate_of_fire=3;
+	current_level.field[j][i].z.health=10;
+	current_level.field[j][i].z.damage=3;
+	current_level.field[j][i].z.range=3;
       }
     }
   }
@@ -134,51 +134,56 @@ void summon_student(student summon){
     current_level.student_tab[i].health=summon.health;
     current_level.student_tab[i].speed=summon.speed;
     current_level.student_tab[i].range=summon.range;
-    current_level.student_tab[i].posX=summon.posX;
+    current_level.student_tab[i].posx=summon.posx;
     current_level.student_tab[i].posy=summon.posy;
     
   }
 }
 
 
-void launch_projectile(projectile p,level *level){
+void launch_projectile(projectile p){
   int i=0;
-  while (level->projectile_tab[i].damage==0 && level->projectile_tab[i].effect==0 && i<=49){   //look for free pos in tab
+  while (current_level.projectile_tab[i].damage==0 && current_level.projectile_tab[i].effect==0 && i<=49){   //look for free pos in tab
     i++;
   }
   if (i<49){
-    level->projectile_tab[i+1]=p;
+    current_level.projectile_tab[i+1].speed=p.speed;
+    current_level.projectile_tab[i+1].posx=p.posx;
+    current_level.projectile_tab[i+1].posy=p.posy;
+    current_level.projectile_tab[i+1].damage=p.damage;
+    current_level.projectile_tab[i+1].effect=p.effect;
+
   }
 }
 
-void suppr_projectile(int num_projectile,level *level){
+void suppr_projectile(int num_projectile){
   int i;
   for (i=num_projectile;i<49;i++){
-    level->projectile_tab[i]=level->projectile_tab[i+1];
+    current_level.projectile_tab[i]=current_level.projectile_tab[i+1];
   }
-  level->projectile_tab[49].damage=0;  //if damage and effect = 0
-  level->projectile_tab[49].effect=0;  //projectile is considered null
+  current_level.projectile_tab[49].damage=0;  //if damage and effect = 0
+  current_level.projectile_tab[49].effect=0;  //projectile is considered null
 }
 
-void suppr_student(int num_student,level *level){
+void suppr_student(int num_student){
   int i;
   for (i=num_student;i<99;i++){
-    level->student_tab[i]=level->student_tab[i+1];
+    current_level.student_tab[i]=current_level.student_tab[i+1];
   }
-  level->student_tab[99].health = 0;
+  current_level.student_tab[99].health = 0;
 }
 
 
-void move_student(level *level){
+void move_student(){
   int i=0;
-  while (level->student_tab[i].health !=0 && i<=99){
-    level->student_tab[i].posx=level->student_tab[i].speed;
+  while (current_level.student_tab[i].health !=0 && i<=99){
+    current_level.student_tab[i].posx=current_level.student_tab[i].speed;
     i++;
   }
 }
 
-void suppr_zombie(int X, int Y, level *level){
-  level->field[Y][X].z.type=0; //zombie 0 is dead zombie
+void suppr_zombie(int X, int Y){
+  current_level.field[Y][X].z.type=0; //zombie 0 is dead zombie
 }
 
 void attack(int attacker, int X, level *level){
@@ -186,7 +191,7 @@ void attack(int attacker, int X, level *level){
   
   result = level->field[level->student_tab[attacker].posy][X].z.health - level->student_tab[attacker].damage;
   if (result <= 0){
-    suppr_zombie(X, level->student_tab[attacker].posy, level);
+    suppr_zombie(X, level->student_tab[attacker].posy);
   }
   else{
     level->field[level->student_tab[attacker].posy][X].z.health = result;
@@ -198,7 +203,7 @@ void attack_z(int defender, int X, int Y, level* level){
   
   result = level->field[Y][X].z.damage - level->student_tab[defender].health;
   if (result <= 0){
-    suppr_student(defender, level);
+    suppr_student(defender);
   }
   else{
     level->student_tab[defender].health = result;

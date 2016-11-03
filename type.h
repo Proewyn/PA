@@ -63,15 +63,15 @@ typedef struct Level{
 
 void UpdateEvents(Input *in);
 void HandleEvents(Input *in);
-void init_zombie(level *l);
+void init_zombie();
 int in_range(student s, level level);
 int impact(projectile p, level l);
 void summon_student(student summon);
-void launch_projectile(projectile p,level *level);
-void suppr_projectile(int num_projectile, level *level);
-void suppr_student(int num_student,level *level);
-void move_student(level *level);
-void suppr_zombie(int X, int Y, level *level);
+void launch_projectile(projectile p);
+void suppr_projectile(int num_projectile);
+void suppr_student(int num_student);
+void move_student();
+void suppr_zombie(int X, int Y);
 void attack(int attacker, int X, level *level);
 void attack_z(int defender, int X, int Y, level *level);
 void init_level(level *level);
