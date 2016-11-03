@@ -66,7 +66,7 @@ void HandleEvents(Input *in);
 void init_zombie(level *l);
 int in_range(student s, level level);
 int impact(projectile p, level l);
-void summon_student(student summon, level *level);
+void summon_student(student summon);
 void launch_projectile(projectile p,level *level);
 void suppr_projectile(int num_projectile, level *level);
 void suppr_student(int num_student,level *level);

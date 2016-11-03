@@ -60,7 +60,7 @@ void HandleEvents(Input *in){
 	  student_temp.range = 1;
 	  student_temp.posx = (double)num_case_x(in->mousex);
 	  student_temp.posy = num_case_y(in->mousey);
-	  summon_student(student_temp, &current_level);
+	  summon_student(student_temp);
 	}  
       }
     }
@@ -121,13 +121,22 @@ int impact(projectile p, level l){
 }
 
 
-void summon_student(student summon, level *level){
+void summon_student(student summon){
   int i=0;
-  while (level->student_tab[i].health !=0 && i<=99){ //look for free pos in tab
+  while (current_level.student_tab[i].health !=0 && i<=99){ //look for free pos in tab
     i++;
   }
   if (i<99){
-    level->student_tab[i+1]=summon;
+    current_level.student_tab[i].rate_of_fire=summon.rate_of_fire;
+    current_level.student_tab[i].cost=summon.cost;
+    current_level.student_tab[i].health=summon.health;
+    current_level.student_tab[i].damage=summon.damage;
+    current_level.student_tab[i].health=summon.health;
+    current_level.student_tab[i].speed=summon.speed;
+    current_level.student_tab[i].range=summon.range;
+    current_level.student_tab[i].posX=summon.posX;
+    current_level.student_tab[i].posy=summon.posy;
+    
   }
 }
 
