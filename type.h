@@ -52,12 +52,15 @@ typedef struct Square{
   bool occupied;
   zombie z;
 }square;
-  
+
 typedef struct Level{
-  square field[FIELD_Y][FIELD_X];
-  student student_tab[100];
-  projectile projectile_tab[50];
+  square** field;
+  student* student_tab;
+  projectile* projectile_tab;
 }level;
+
+extern int highlight_menu;
+extern level current_level;
 
 /*declaration of function*/
 
@@ -74,7 +77,7 @@ void move_student();
 void suppr_zombie(int X, int Y);
 void attack(int attacker, int X, level *level);
 void attack_z(int defender, int X, int Y, level *level);
-void init_level(level *level);
+void init_level();
 int num_student_menu(int posX);
 int num_case_x(int posX);
 int num_case_y(int posY);

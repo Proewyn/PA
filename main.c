@@ -16,6 +16,13 @@ level current_level;
 
 int main ()
 {
+  current_level.field=(square**)malloc(FIELD_Y*sizeof(square*));
+  for (i=0;i<FIELD_Y;i++){
+    current_level.field[i]=(square*)malloc(FIELD_X*sizeof(square));
+  }
+  current_level.student_tab=(student*)malloc(100*sizeof(student));
+  current_level.projectile_tab=(projectile*)malloc(100*sizeof(projectile));
+  
   SDL_Init(SDL_INIT_VIDEO);
   SDL_WM_SetCaption("Student versus Zombie", "Student versus Zombie");
   SDL_Surface* screen = SDL_SetVideoMode(1080, 720, 0, 0);
@@ -58,11 +65,15 @@ int main ()
 /*load menu student 1*/
   rcstudent_base.x=170;
   rcstudent_base.y=0;
-  
-  init_level(&current_level);
+
+
+
+
+  init_level();
 
   Input in;
   memset(&in, 0, sizeof(in));
+
 
 
   while (!in.key[SDLK_LAST] && !in.quit){
@@ -78,10 +89,10 @@ int main ()
       SDL_BlitSurface(student_sprite_tab[1],NULL,screen,&rcstudent_base);
     }
 
-    for (j=0;j<5;j++){
-      for (i=0;i<10;i++){
-	draw.x = 80+i*90;
-	draw.y = 140+j*90;
+    for (j=0;j<FIELD_X;j++){
+      for (i=0;i<FIELD_Y;i++){
+	draw.x = 80+j*90;
+	draw.y = 140+i*90;
 	if (current_level.field[i][j].z.type > 0){
 	  SDL_BlitSurface(zombie_sprite_tab[current_level.field[i][j].z.type], NULL, screen, &draw); 
 	}

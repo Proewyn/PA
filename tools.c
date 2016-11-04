@@ -1,8 +1,6 @@
 #include "type.h"
 
-int highlight_menu;
 bool is_select=false;
-level current_level;
 
 
 void UpdateEvents(Input* in)
@@ -64,6 +62,17 @@ void HandleEvents(Input *in){
 	}  
       }
     }
+    int j,i;
+    for(j=0;j<FIELD_X;j++){
+      for(i=0;i<FIELD_Y;i++){
+	printf("%d ",current_level.field[i][j].z.type);
+      }
+      printf("\n");
+    }
+    for(i=0;i<10;i++){
+      printf("vie %d: %d \n",i,current_level.student_tab[i].health);
+    }
+    
     printf("%d %d\n", in->mousex, in->mousey);
   }
 }
@@ -72,8 +81,8 @@ void init_zombie(){
 
   int i, j;
 
-  for (j=0;j<=9;j++){
-    for (i=0;i<=4;i++){
+  for (j=0;j<FIELD_Y;j++){
+    for (i=0;i<FIELD_X;i++){
       if (current_level.field[j][i].z.type == 0){
 	current_level.field[j][i].z.rate_of_fire=0;
 	current_level.field[j][i].z.health=0;
@@ -123,15 +132,15 @@ int impact(projectile p, level l){
 
 void summon_student(student summon){
   int i=0;
-  while (current_level.student_tab[i].health !=0 && i<=99){ //look for free pos in tab
+  while (i<=99 && current_level.student_tab[i].health !=0){ //look for free pos in tab
     i++;
   }
   if (i<99){
+    printf("%d \n",i);
     current_level.student_tab[i].rate_of_fire=summon.rate_of_fire;
     current_level.student_tab[i].cost=summon.cost;
     current_level.student_tab[i].health=summon.health;
     current_level.student_tab[i].damage=summon.damage;
-    current_level.student_tab[i].health=summon.health;
     current_level.student_tab[i].speed=summon.speed;
     current_level.student_tab[i].range=summon.range;
     current_level.student_tab[i].posx=summon.posx;
@@ -210,7 +219,8 @@ void attack_z(int defender, int X, int Y, level* level){
   }
 }
 
-void init_level(level *level){
+
+void init_level(){
   int i,j;
   FILE* fichier = NULL;
   //char chaine[3]="";
@@ -218,15 +228,16 @@ void init_level(level *level){
   int trash;
 
   if (fichier != NULL){
-    for(j=0;j<5;j++){
-      for(i=0;i<10;i++){;
-	level->field[i][j].obstacle=fgetc(fichier)-48; //-48 valeur ASCII=>int
-	level->field[i][j].occupied=fgetc(fichier)-48;
-	level->field[i][j].z.type=fgetc(fichier)-48;
+    for(j=0;j<FIELD_X;j++){
+      for(i=0;i<FIELD_Y;i++){;
+	current_level.field[i][j].obstacle=fgetc(fichier)-48; //-48 valeur ASCII=>int
+	current_level.field[i][j].occupied=fgetc(fichier)-48;
+	current_level.field[i][j].z.type=fgetc(fichier)-48;
 	trash=fgetc(fichier); // récupére les \n et fais avancer le curseur à la ligne suivante
       }
     }
   }
+  (void)trash;
   fclose(fichier);
 }
 
