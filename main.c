@@ -5,7 +5,7 @@
 
 SDL_Surface *grass,*student_base, *zombie_sprite_tab[5], *student_sprite_tab[10];
 
-SDL_Rect rcgrass, rcstudent_base,rcstudent_baserc, rczombie_base, rczombie_baserc, draw;
+SDL_Rect rcgrass,rcstudent_baserc, rczombie_base, rczombie_baserc, draw, menu_student_tab[5];
 
 int colorkey, i, j, highlight_menu;
 
@@ -34,13 +34,21 @@ int main ()
  /* load student*/
  
  temp=SDL_LoadBMP("img/student2.bmp");
- student_sprite_tab[1]=SDL_DisplayFormat(temp);
+ student_sprite_tab[0]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
  
+ temp=SDL_LoadBMP("img/archer2.bmp");
+ student_sprite_tab[1]=SDL_DisplayFormat(temp);
+ SDL_FreeSurface(temp);
+
  temp=SDL_LoadBMP("img/student_select2.bmp");
  student_sprite_tab[2]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
- 
+
+ temp=SDL_LoadBMP("img/archer_select2.bmp");
+ student_sprite_tab[3]=SDL_DisplayFormat(temp);
+ SDL_FreeSurface(temp);
+  
  /*load monster*/
  temp=SDL_LoadBMP("img/zombie.bmp");
  zombie_sprite_tab[1]=SDL_DisplayFormat(temp);
@@ -53,16 +61,20 @@ int main ()
  colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
  SDL_SetColorKey(zombie_sprite_tab[1], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(zombie_sprite_tab[2], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+ SDL_SetColorKey(student_sprite_tab[0], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(student_sprite_tab[1], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(student_sprite_tab[2], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+ SDL_SetColorKey(student_sprite_tab[3], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  
  /*grass init*/
  rcgrass.x=SIZE_SQUARE;
  rcgrass.y=BOTTOM_MENU;
  
- /*load menu student 1*/
- rcstudent_base.x=BOTTOM_MENU-10;
- rcstudent_base.y=0;
+ /*load menu student */
+ for (i=0;i<5;i++){
+   menu_student_tab[i].x=170+SIZE_SQUARE*i;
+   menu_student_tab[i].y=0;
+ }
  
  init_level();
  init_zombie();
@@ -81,7 +93,7 @@ int main ()
      pos_attack = in_range_s(current_level.student_tab[i]);
      if (pos_attack != -1){
        if(SDL_GetTicks()-current_level.student_tab[i].last_hit >= current_level.student_tab[i].rate_of_fire*1000){
-	 current_level.student_tab[i].last_hit=SDL_GetTicks();
+	 current_level.student_tab[i].last_hit = SDL_GetTicks();
 	 printf("student\n");
 	 attack(current_level.student_tab[i], pos_attack);
        }
@@ -94,8 +106,8 @@ int main ()
        if (current_level.field[i][j].z.type != 0){
 	 pos_attack = in_range_z(j, i);
 	 if (pos_attack != -1){
-	   if(SDL_GetTicks()-current_level.field[i][j].z.last_hit >=current_level.field[i][j].z.rate_of_fire*1000){
-	     current_level.field[i][j].z.last_hit=SDL_GetTicks();
+	   if (SDL_GetTicks()-current_level.field[i][j].z.last_hit >= current_level.field[i][j].z.rate_of_fire*1000){
+	     current_level.field[i][j].z.last_hit = SDL_GetTicks();
 	     printf("zombie\n");
 	     attack_z(pos_attack, j, i);
 	   }
@@ -103,16 +115,20 @@ int main ()
        }
      }
    }
-
+   
    /*draw*/
    SDL_BlitSurface(grass,NULL,screen,&rcgrass);
-   if (highlight_menu == 1){
-     SDL_BlitSurface(student_sprite_tab[2],NULL,screen,&rcstudent_base);
-   }
-   else{
-     SDL_BlitSurface(student_sprite_tab[1],NULL,screen,&rcstudent_base);
-     }
    
+   for (i=0;i<2;i++){
+     if (highlight_menu == i+1){
+       SDL_BlitSurface(student_sprite_tab[i+2],NULL,screen,&menu_student_tab[i]);
+     }else{
+       SDL_BlitSurface(student_sprite_tab[i],NULL,screen,&menu_student_tab[i]);
+     }
+   }
+   
+
+
    for (j=0;j<FIELD_X;j++){
      for (i=0;i<FIELD_Y;i++){
        draw.x = 80+j*SIZE_SQUARE;
@@ -127,7 +143,7 @@ int main ()
    while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
      draw.y=140+(current_level.student_tab[i].posy)*SIZE_SQUARE;
      draw.x=80+current_level.student_tab[i].posx;
-     SDL_BlitSurface(student_sprite_tab[1], NULL, screen, &draw);
+     SDL_BlitSurface(student_sprite_tab[current_level.student_tab[i].type-1], NULL, screen, &draw);
      i++;
    }
    

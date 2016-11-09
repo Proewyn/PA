@@ -60,8 +60,21 @@ void HandleEvents(Input *in){
 	    student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
 	    student_temp.posy = num_case_y(in->mousey);
 	    student_temp.last_hit = 0;
+	    student_temp.type = 1;
 	    summon_student(student_temp);
-	  }
+	  }else if(highlight_menu == 2){
+	      student_temp.rate_of_fire = 2;
+	      student_temp.cost = 10;
+	      student_temp.health = 10;
+	      student_temp.damage = 3;
+	      student_temp.speed = 1;
+	      student_temp.range = 3;
+	      student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
+	      student_temp.posy = num_case_y(in->mousey);
+	      student_temp.last_hit = 0;
+	      student_temp.type = 2;
+	      summon_student(student_temp);
+	    }
 	}  
       }
     }
@@ -100,7 +113,7 @@ void init_zombie(){
 	current_level.field[j][i].z.last_hit=0;
       }
       else if (current_level.field[j][i].z.type == 2){
-	current_level.field[j][i].z.rate_of_fire=3;
+	current_level.field[j][i].z.rate_of_fire=2;
 	current_level.field[j][i].z.health=10;
 	current_level.field[j][i].z.damage=3;
 	current_level.field[j][i].z.range=3;
@@ -172,7 +185,8 @@ void summon_student(student summon){
     current_level.student_tab[i].range=summon.range;
     current_level.student_tab[i].posx=summon.posx;
     current_level.student_tab[i].posy=summon.posy;
-    
+    current_level.student_tab[i].last_hit=summon.last_hit;
+    current_level.student_tab[i].type=summon.type;    
   }
 }
 
@@ -278,7 +292,7 @@ void init_level(){
 int num_student_menu(int posX){
   int i;
 
-  for(i=1;i<=1;i++){
+  for(i=1;i<=2;i++){
     if (posX>(SIZE_SQUARE*(i+1)) && posX<(SIZE_SQUARE*(i+2))){
       return i;
     }

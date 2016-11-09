@@ -34,6 +34,7 @@ typedef struct Student{
   double posx;
   int posy;
   Uint32 last_hit;
+  int type;
 }student;
 
 typedef struct Zombie{
