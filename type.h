@@ -33,6 +33,7 @@ typedef struct Student{
   int range;
   double posx;
   int posy;
+  Uint32 last_hit;
 }student;
 
 typedef struct Zombie{
@@ -41,6 +42,7 @@ typedef struct Zombie{
   int health;
   int damage;
   int range;
+  Uint32 last_hit;
 }zombie;
 
 typedef struct Projectile{

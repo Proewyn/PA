@@ -59,6 +59,7 @@ void HandleEvents(Input *in){
 	    student_temp.range = 1;
 	    student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
 	    student_temp.posy = num_case_y(in->mousey);
+	    student_temp.last_hit = 0;
 	    summon_student(student_temp);
 	  }
 	}  
@@ -89,18 +90,21 @@ void init_zombie(){
 	current_level.field[j][i].z.health=0;
 	current_level.field[j][i].z.damage=0;
 	current_level.field[j][i].z.range=0;
+	current_level.field[j][i].z.last_hit=0;
       }
       else if (current_level.field[j][i].z.type == 1){
 	current_level.field[j][i].z.rate_of_fire=2;
 	current_level.field[j][i].z.health=20;
 	current_level.field[j][i].z.damage=3;
 	current_level.field[j][i].z.range=1;
+	current_level.field[j][i].z.last_hit=0;
       }
       else if (current_level.field[j][i].z.type == 2){
 	current_level.field[j][i].z.rate_of_fire=3;
 	current_level.field[j][i].z.health=10;
 	current_level.field[j][i].z.damage=3;
 	current_level.field[j][i].z.range=3;
+	current_level.field[j][i].z.last_hit=0;
       }
     }
   }
