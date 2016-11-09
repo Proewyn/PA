@@ -185,9 +185,13 @@ void suppr_student(int num_student){
 
 void move_student(){
   int i=0;
+  double nextpos;	
   while (i<STUDENT_MAX && current_level.student_tab[i].health !=0 ){
-    if (in_range(current_level.student_tab[i]) == -1){
-      current_level.student_tab[i].posx=current_level.student_tab[i].posx + current_level.student_tab[i].speed;
+    nextpos=current_level.student_tab[i].posx + current_level.student_tab[i].speed;
+    if (nextpos>FIELD_X*SIZE_SQUARE){
+      suppr_student(i);
+    }else{
+      current_level.student_tab[i].posx=nextpos;
     }
     i++;
   }
