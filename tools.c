@@ -56,7 +56,7 @@ void HandleEvents(Input *in){
 	  student_temp.damage = 2;
 	  student_temp.speed = 1;
 	  student_temp.range = 1;
-	  student_temp.posx = (double)num_case_x(in->mousex);
+	  student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
 	  student_temp.posy = num_case_y(in->mousey);
 	  summon_student(student_temp);
 	}  
@@ -106,14 +106,14 @@ void init_zombie(){
 
 int in_range(student s){
   int i;
-  int beg = (int)(s.posx);
-  int end = (int)(s.posx) + s.range;
+  int beg = (int)(s.posx)/SIZE_SQUARE;
+  int end = (int)(s.posx)/SIZE_SQUARE + s.range;
   for (i=beg;i<=end;i++){
     if (i<FIELD_X){
       if (current_level.field[s.posy][i].obstacle==true){
 	return -1;
       }
-      else{if (current_level.field[s.posy][i].occupied==true){
+      else{if (current_level.field[s.posy][i].z.type!=0){
 	  return i;
 	}
       }
@@ -186,7 +186,7 @@ void suppr_student(int num_student){
 void move_student(){
   int i=0;
   while (i<STUDENT_MAX && current_level.student_tab[i].health !=0 ){
-    if (in_range(current_level.student_tab[i]) != -1){
+    if (in_range(current_level.student_tab[i]) == -1){
       current_level.student_tab[i].posx=current_level.student_tab[i].posx + current_level.student_tab[i].speed;
     }
     i++;
@@ -233,7 +233,6 @@ void init_level(){
     for(j=0;j<FIELD_X;j++){
       for(i=0;i<FIELD_Y;i++){;
 	current_level.field[i][j].obstacle=fgetc(fichier)-48; //-48 valeur ASCII=>int
-	current_level.field[i][j].occupied=fgetc(fichier)-48;
 	current_level.field[i][j].z.type=fgetc(fichier)-48;
 	trash=fgetc(fichier); // récupére les \n et fais avancer le curseur à la ligne suivante
       }

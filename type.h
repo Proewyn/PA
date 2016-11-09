@@ -53,7 +53,6 @@ typedef struct Projectile{
 
 typedef struct Square{
   bool obstacle; //must init both of them in a function
-  bool occupied;
   zombie z;
 }square;
 
