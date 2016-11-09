@@ -80,8 +80,11 @@ int main ()
    while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
      pos_attack = in_range_s(current_level.student_tab[i]);
      if (pos_attack != -1){
-       printf("student\n");
-       attack(current_level.student_tab[i], pos_attack);
+       if(SDL_GetTicks()-current_level.student_tab[i].last_hit >= current_level.student_tab[i].rate_of_fire*1000){
+	 current_level.student_tab[i].last_hit=SDL_GetTicks();
+	 printf("student\n");
+	 attack(current_level.student_tab[i], pos_attack);
+       }
      }
      i++;
    }
@@ -91,8 +94,11 @@ int main ()
        if (current_level.field[i][j].z.type != 0){
 	 pos_attack = in_range_z(j, i);
 	 if (pos_attack != -1){
-	   printf("zombie\n");
-	   attack_z(pos_attack, j, i);
+	   if(SDL_GetTicks()-current_level.field[i][j].z.last_hit >=current_level.field[i][j].z.rate_of_fire*1000){
+	     current_level.field[i][j].z.last_hit=SDL_GetTicks();
+	     printf("zombie\n");
+	     attack_z(pos_attack, j, i);
+	   }
 	 }
        }
      }
