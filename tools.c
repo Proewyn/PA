@@ -40,7 +40,7 @@ void HandleEvents(Input *in){
   }
   if (in->mousebuttons[1]){
     in->mousebuttons[1]=0;
-    if (in->mousey < 180){
+    if (in->mousey < BOTTOM_MENU){
       highlight_menu = num_student_menu(in->mousex);
       if (highlight_menu != 0){
 	is_select = true;
@@ -63,8 +63,8 @@ void HandleEvents(Input *in){
       }
     }
     int j,i;
-    for(j=0;j<FIELD_X;j++){
-      for(i=0;i<FIELD_Y;i++){
+    for(i=0;i<FIELD_Y;i++){
+      for(j=0;j<FIELD_X;j++){
 	printf("%d ",current_level.field[i][j].z.type);
       }
       printf("\n");
@@ -72,7 +72,6 @@ void HandleEvents(Input *in){
     for(i=0;i<10;i++){
       printf("vie %d: %d \n",i,current_level.student_tab[i].health);
     }
-    
     printf("%d %d\n", in->mousex, in->mousey);
   }
 }
@@ -89,13 +88,13 @@ void init_zombie(){
 	current_level.field[j][i].z.damage=0;
 	current_level.field[j][i].z.range=0;
       }
-      else if (current_level.field[FIELD_Y][FIELD_X].z.type == 1){
+      else if (current_level.field[j][i].z.type == 1){
 	current_level.field[j][i].z.rate_of_fire=2;
 	current_level.field[j][i].z.health=20;
 	current_level.field[j][i].z.damage=3;
 	current_level.field[j][i].z.range=1;
       }
-      else if (current_level.field[FIELD_Y][FIELD_X].z.type == 2){
+      else if (current_level.field[j][i].z.type == 2){
 	current_level.field[j][i].z.rate_of_fire=3;
 	current_level.field[j][i].z.health=10;
 	current_level.field[j][i].z.damage=3;
@@ -104,7 +103,6 @@ void init_zombie(){
     }
   }
 }
-
 
 int in_range(student s){
   int i;
@@ -116,8 +114,9 @@ int in_range(student s){
 	return -1;
       }
       else{if (current_level.field[s.posy][i].occupied==true){
-	return i;
-	}}
+	  return i;
+	}
+      }
     }
   }
   return -1;
@@ -134,10 +133,10 @@ int impact(projectile p, level l){
 
 void summon_student(student summon){
   int i=0;
-  while (i<=99 && current_level.student_tab[i].health !=0){ //look for free pos in tab
+  while (i<STUDENT_MAX && current_level.student_tab[i].health !=0){ //look for free pos in tab
     i++;
   }
-  if (i<99){
+  if (i<STUDENT_MAX-1){
     printf("%d \n",i);
     current_level.student_tab[i].rate_of_fire=summon.rate_of_fire;
     current_level.student_tab[i].cost=summon.cost;
@@ -154,10 +153,10 @@ void summon_student(student summon){
 
 void launch_projectile(projectile p){
   int i=0;
-  while (current_level.projectile_tab[i].damage==0 && current_level.projectile_tab[i].effect==0 && i<=49){   //look for free pos in tab
+  while (current_level.projectile_tab[i].damage==0 && current_level.projectile_tab[i].effect==0 && i<PROJECTILE_MAX){   //look for free pos in tab
     i++;
   }
-  if (i<49){
+  if (i<PROJECTILE_MAX-1){
     current_level.projectile_tab[i+1].speed=p.speed;
     current_level.projectile_tab[i+1].posx=p.posx;
     current_level.projectile_tab[i+1].posy=p.posy;
@@ -169,21 +168,20 @@ void launch_projectile(projectile p){
 
 void suppr_projectile(int num_projectile){
   int i;
-  for (i=num_projectile;i<49;i++){
+  for (i=num_projectile;i<PROJECTILE_MAX;i++){
     current_level.projectile_tab[i]=current_level.projectile_tab[i+1];
   }
-  current_level.projectile_tab[49].damage=0;  //if damage and effect = 0
-  current_level.projectile_tab[49].effect=0;  //projectile is considered null
+  current_level.projectile_tab[PROJECTILE_MAX-1].damage=0;  //if damage and effect = 0
+  current_level.projectile_tab[PROJECTILE_MAX-1].effect=0;  //projectile is considered null
 }
 
 void suppr_student(int num_student){
   int i;
-  for (i=num_student;i<99;i++){
+  for (i=num_student;i<STUDENT_MAX-1;i++){
     current_level.student_tab[i]=current_level.student_tab[i+1];
   }
-  current_level.student_tab[99].health = 0;
+  current_level.student_tab[STUDENT_MAX-1].health = 0;
 }
-
 
 void move_student(){
   int i=0;
@@ -249,7 +247,7 @@ int num_student_menu(int posX){
   int i;
 
   for(i=1;i<=1;i++){
-    if (posX>(90*(i+1)) && posX<(90*(i+2))){
+    if (posX>(SIZE_SQUARE*(i+1)) && posX<(SIZE_SQUARE*(i+2))){
       return i;
     }
   }
@@ -257,9 +255,9 @@ int num_student_menu(int posX){
 }
 
 int num_case_x(int posX){
-  return (int)(posX-90)/90;
+  return (int)(posX-SIZE_SQUARE)/SIZE_SQUARE;
 }
 
 int num_case_y(int posY){
-  return (int)(posY-180)/90;
+  return (int)(posY-BOTTOM_MENU)/SIZE_SQUARE;
 }
