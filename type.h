@@ -10,6 +10,10 @@
 
 #define FIELD_X 10
 #define FIELD_Y 5
+#define SIZE_SQUARE 90
+#define BOTTOM_MENU 180
+#define STUDENT_MAX 100
+#define PROJECTILE_MAX 50
 
 /*structures*/
 
@@ -67,7 +71,7 @@ extern level current_level;
 void UpdateEvents(Input *in);
 void HandleEvents(Input *in);
 void init_zombie();
-int in_range(student s, level level);
+int in_range(student s);
 int impact(projectile p, level l);
 void summon_student(student summon);
 void launch_projectile(projectile p);
