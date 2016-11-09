@@ -67,6 +67,7 @@ int main ()
  init_level();
  init_zombie();
  
+ int pos_attack;
  Input in;
  memset(&in, 0, sizeof(in));
  
@@ -74,7 +75,29 @@ int main ()
    UpdateEvents(&in);
    HandleEvents(&in);
    move_student();
+
+   i=0;
+   while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
+     pos_attack = in_range_s(current_level.student_tab[i]);
+     if (pos_attack != -1){
+       printf("student\n");
+       attack(current_level.student_tab[i], pos_attack);
+     }
+     i++;
+   }
    
+   for (j=0;j<FIELD_X;j++){
+     for (i=0;i<FIELD_Y;i++){
+       if (current_level.field[i][j].z.type != 0){
+	 pos_attack = in_range_z(j, i);
+	 if (pos_attack != -1){
+	   printf("zombie\n");
+	   attack_z(pos_attack, j, i);
+	 }
+       }
+     }
+   }
+
    /*draw*/
    SDL_BlitSurface(grass,NULL,screen,&rcgrass);
    if (highlight_menu == 1){
@@ -82,7 +105,7 @@ int main ()
    }
    else{
      SDL_BlitSurface(student_sprite_tab[1],NULL,screen,&rcstudent_base);
-   }
+     }
    
    for (j=0;j<FIELD_X;j++){
      for (i=0;i<FIELD_Y;i++){

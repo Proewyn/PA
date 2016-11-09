@@ -48,17 +48,19 @@ void HandleEvents(Input *in){
     }
     else{
       if (is_select){
-	student student_temp;
-	if (highlight_menu == 1){
-	  student_temp.rate_of_fire = 1;
-	  student_temp.cost = 10;
-	  student_temp.health = 15;
-	  student_temp.damage = 2;
-	  student_temp.speed = 1;
-	  student_temp.range = 1;
-	  student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
-	  student_temp.posy = num_case_y(in->mousey);
-	  summon_student(student_temp);
+	if (in->mousey<=BOTTOM_MENU+5*SIZE_SQUARE){
+	  student student_temp;
+	  if (highlight_menu == 1){
+	    student_temp.rate_of_fire = 1;
+	    student_temp.cost = 10;
+	    student_temp.health = 15;
+	    student_temp.damage = 2;
+	    student_temp.speed = 1;
+	    student_temp.range = 1;
+	    student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
+	    student_temp.posy = num_case_y(in->mousey);
+	    summon_student(student_temp);
+	  }
 	}  
       }
     }
@@ -104,7 +106,7 @@ void init_zombie(){
   }
 }
 
-int in_range(student s){
+int in_range_s(student s){
   int i;
   int beg = (int)(s.posx)/SIZE_SQUARE;
   int end = (int)(s.posx)/SIZE_SQUARE + s.range;
@@ -120,6 +122,26 @@ int in_range(student s){
     }
   }
   return -1;
+}
+
+int in_range_z(int X, int Y){
+  int num_student=-1, i=0;
+  double distance = 2000;
+  int beg = X*SIZE_SQUARE;
+  int end = (X-current_level.field[Y][X].z.range)*SIZE_SQUARE;
+  
+  while (i<STUDENT_MAX && current_level.student_tab[i].health !=0){
+    if (current_level.student_tab[i].posy == Y){
+      if (current_level.student_tab[i].posx <= beg && current_level.student_tab[i].posx >= end){
+	if (distance > X*SIZE_SQUARE - current_level.student_tab[i].posx){
+	  distance = X*SIZE_SQUARE - current_level.student_tab[i].posx;
+	  num_student = i;
+	}
+      }
+    }
+    i++;
+  }
+  return num_student;
 }
 
 
@@ -187,11 +209,11 @@ void move_student(){
   int i=0;
   double nextpos;	
   while (i<STUDENT_MAX && current_level.student_tab[i].health !=0 ){
-    if(in_range(current_level.student_tab[i]) == -1){
+    if(in_range_s(current_level.student_tab[i]) == -1){
       nextpos=current_level.student_tab[i].posx + current_level.student_tab[i].speed;
       if (nextpos>FIELD_X*SIZE_SQUARE){
 	suppr_student(i);
-    }else{
+      }else{
 	current_level.student_tab[i].posx=nextpos;
       }
     }	
@@ -199,31 +221,32 @@ void move_student(){
   }
 }
 
+
 void suppr_zombie(int X, int Y){
   current_level.field[Y][X].z.type=0; //zombie 0 is dead zombie
 }
 
-void attack(int attacker, int X, level *level){
+void attack(student attacker, int X){
   int result;
   
-  result = level->field[level->student_tab[attacker].posy][X].z.health - level->student_tab[attacker].damage;
+  result = current_level.field[attacker.posy][X].z.health - attacker.damage;
   if (result <= 0){
-    suppr_zombie(X, level->student_tab[attacker].posy);
+    suppr_zombie(X, attacker.posy);
   }
   else{
-    level->field[level->student_tab[attacker].posy][X].z.health = result;
+    current_level.field[attacker.posy][X].z.health = result;
   }
 }
 
-void attack_z(int defender, int X, int Y, level* level){
+void attack_z(int defender, int X, int Y){
   int result;
   
-  result = level->field[Y][X].z.damage - level->student_tab[defender].health;
+  result = current_level.student_tab[defender].health - current_level.field[Y][X].z.damage;
   if (result <= 0){
     suppr_student(defender);
   }
   else{
-    level->student_tab[defender].health = result;
+    current_level.student_tab[defender].health = result;
   }
 }
 
@@ -267,5 +290,3 @@ int num_case_y(int posY){
   return (int)(posY-BOTTOM_MENU)/SIZE_SQUARE;
 }
 
-void global_draw(){
-}
