@@ -124,7 +124,7 @@ int in_range(student s){
 
 
 int impact(projectile p, level l){
-  if(l.field[p.posy][(int)(p.posx-0.5)].occupied==true){
+  if(l.field[p.posy][(int)(p.posx-0.5)].z.type!=0){
     return (int)(p.posx-0.5);
   }
   return -1;   //no impact
@@ -259,4 +259,7 @@ int num_case_x(int posX){
 
 int num_case_y(int posY){
   return (int)(posY-BOTTOM_MENU)/SIZE_SQUARE;
+}
+
+void global_draw(){
 }

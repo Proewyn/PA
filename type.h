@@ -84,4 +84,5 @@ void init_level();
 int num_student_menu(int posX);
 int num_case_x(int posX);
 int num_case_y(int posY);
+void global_draw();
 #endif
