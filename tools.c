@@ -106,17 +106,19 @@ void init_zombie(){
 }
 
 
-int in_range(student s,level level){
+int in_range(student s){
   int i;
   int beg = (int)(s.posx);
   int end = (int)(s.posx) + s.range;
   for (i=beg;i<=end;i++){
-    if (level.field[s.posy][i].obstacle==true){
-      return -1;
+    if (i<FIELD_X){
+      if (current_level.field[s.posy][i].obstacle==true){
+	return -1;
+      }
+      else{if (current_level.field[s.posy][i].occupied==true){
+	return i;
+	}}
     }
-    else{if (level.field[s.posy][i].occupied==true){
-      return i;
-      }}
   }
   return -1;
 }
@@ -185,8 +187,10 @@ void suppr_student(int num_student){
 
 void move_student(){
   int i=0;
-  while (current_level.student_tab[i].health !=0 && i<=99){
-    current_level.student_tab[i].posx=current_level.student_tab[i].speed;
+  while (i<STUDENT_MAX && current_level.student_tab[i].health !=0 ){
+    if (in_range(current_level.student_tab[i]) != -1){
+      current_level.student_tab[i].posx=current_level.student_tab[i].posx + current_level.student_tab[i].speed;
+    }
     i++;
   }
 }
