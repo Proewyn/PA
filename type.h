@@ -47,11 +47,14 @@ typedef struct Zombie{
 }zombie;
 
 typedef struct Projectile{
+  int type;
   float speed;
   double posx;
   int posy;
   int damage;
   int effect;
+  int area;
+;
 }projectile;
 
 typedef struct Square{
@@ -75,14 +78,16 @@ void HandleEvents(Input *in);
 void init_zombie();
 int in_range_s(student s);
 int in_range_z(int X, int Y);
-int impact(projectile p, level l);
+int impact(projectile p);
 void summon_student(student summon);
-void launch_projectile(projectile p);
+void launch_projectile(int num);
 void suppr_projectile(int num_projectile);
 void suppr_student(int num_student);
 void move_student();
+void move_projectile();
 void suppr_zombie(int X, int Y);
 void attack(student attacker, int X);
+void projectile_hit(projectile p, int X);
 void attack_z(int defender, int X, int Y);
 void init_level();
 int num_student_menu(int posX);

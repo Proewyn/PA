@@ -3,7 +3,7 @@
 
 /* definition of global variables*/
 
-SDL_Surface *grass,*student_base, *zombie_sprite_tab[5], *student_sprite_tab[10];
+SDL_Surface *grass,*student_base, *zombie_sprite_tab[5], *student_sprite_tab[10], *projectile_sprite_tab[5];
 
 SDL_Rect rcgrass,rcstudent_baserc, rczombie_base, rczombie_baserc, draw, menu_student_tab[5];
 
@@ -65,6 +65,15 @@ int main ()
  temp=SDL_LoadBMP("img/lich.bmp");
  zombie_sprite_tab[2]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
+
+/*load projectile*/
+temp=SDL_LoadBMP("img/fleche.bmp");
+projectile_sprite_tab[0]=SDL_DisplayFormat(temp);
+SDL_FreeSurface(temp);
+
+temp=SDL_LoadBMP("img/fireball.bmp");
+projectile_sprite_tab[1]=SDL_DisplayFormat(temp);
+SDL_FreeSurface(temp);
  
  colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
  SDL_SetColorKey(zombie_sprite_tab[1], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
@@ -75,6 +84,8 @@ int main ()
  SDL_SetColorKey(student_sprite_tab[3], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(student_sprite_tab[4], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(student_sprite_tab[5], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 0, 249, 252));
+ SDL_SetColorKey(projectile_sprite_tab[0], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 255, 255, 255));
+ SDL_SetColorKey(projectile_sprite_tab[1], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 255, 255, 255));
  
  /*grass init*/
  rcgrass.x=SIZE_SQUARE;
@@ -97,6 +108,7 @@ int main ()
    UpdateEvents(&in);
    HandleEvents(&in);
    move_student();
+   move_projectile();
 
    i=0;
    while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
@@ -104,9 +116,25 @@ int main ()
      if (pos_attack != -1){
        if(SDL_GetTicks()-current_level.student_tab[i].last_hit >= current_level.student_tab[i].rate_of_fire*1000){
 	 current_level.student_tab[i].last_hit = SDL_GetTicks();
-	 printf("student\n");
-	 attack(current_level.student_tab[i], pos_attack);
+	 if(current_level.student_tab[i].type==1){
+	   printf("cac\n");
+	   attack(current_level.student_tab[i], pos_attack);
+	 }else{
+	   printf("ranged\n");
+	   launch_projectile(i);
+	 }
        }
+     }
+     i++;
+   }
+
+   i=0;
+   while (i<PROJECTILE_MAX && current_level.projectile_tab[i].type != 0){
+     pos_attack = impact(current_level.projectile_tab[i]);
+     if(pos_attack != -1){
+       printf("pos_attack: %d\n",pos_attack);
+       projectile_hit(current_level.projectile_tab[i], pos_attack);
+       suppr_projectile(i);
      }
      i++;
    }
@@ -156,7 +184,14 @@ int main ()
      SDL_BlitSurface(student_sprite_tab[current_level.student_tab[i].type-1], NULL, screen, &draw);
      i++;
    }
-   
+
+   i=0;
+   while(i<PROJECTILE_MAX && current_level.projectile_tab[i].type!=0){
+     draw.y=180+(current_level.projectile_tab[i].posy)*SIZE_SQUARE;
+     draw.x=90+current_level.projectile_tab[i].posx;
+     SDL_BlitSurface(projectile_sprite_tab[current_level.projectile_tab[i].type-1], NULL, screen, &draw);
+     i++;
+   }
    
    
    SDL_UpdateRect(screen, 0, 0, 0, 0);
