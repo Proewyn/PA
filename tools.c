@@ -278,7 +278,7 @@ void projectile_hit(projectile p, int X){
   else{
     current_level.field[p.posy][X].z.health = result;
   }
-  if(range == 1){
+  if(p.area == 1){
     result = current_level.field[p.posy-1][X].z.health - p.damage;
     if (result <= 0){
       suppr_zombie(X, p.posy-1);
