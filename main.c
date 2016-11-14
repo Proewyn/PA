@@ -41,12 +41,20 @@ int main ()
  student_sprite_tab[1]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/student_select2.bmp");
+ temp=SDL_LoadBMP("img/mage2.bmp");
  student_sprite_tab[2]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/archer_select2.bmp");
+ temp=SDL_LoadBMP("img/student_select2.bmp");
  student_sprite_tab[3]=SDL_DisplayFormat(temp);
+ SDL_FreeSurface(temp);
+
+ temp=SDL_LoadBMP("img/archer_select2.bmp");
+ student_sprite_tab[4]=SDL_DisplayFormat(temp);
+ SDL_FreeSurface(temp);
+
+ temp=SDL_LoadBMP("img/mage_select2.bmp");
+ student_sprite_tab[5]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
   
  /*load monster*/
@@ -63,15 +71,17 @@ int main ()
  SDL_SetColorKey(zombie_sprite_tab[2], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(student_sprite_tab[0], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(student_sprite_tab[1], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
- SDL_SetColorKey(student_sprite_tab[2], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+ SDL_SetColorKey(student_sprite_tab[2], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 0, 249, 252));
  SDL_SetColorKey(student_sprite_tab[3], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+ SDL_SetColorKey(student_sprite_tab[4], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+ SDL_SetColorKey(student_sprite_tab[5], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 0, 249, 252));
  
  /*grass init*/
  rcgrass.x=SIZE_SQUARE;
  rcgrass.y=BOTTOM_MENU;
  
  /*load menu student */
- for (i=0;i<5;i++){
+ for (i=0;i<6;i++){
    menu_student_tab[i].x=170+SIZE_SQUARE*i;
    menu_student_tab[i].y=0;
  }
@@ -119,9 +129,9 @@ int main ()
    /*draw*/
    SDL_BlitSurface(grass,NULL,screen,&rcgrass);
    
-   for (i=0;i<2;i++){
+   for (i=0;i<3;i++){
      if (highlight_menu == i+1){
-       SDL_BlitSurface(student_sprite_tab[i+2],NULL,screen,&menu_student_tab[i]);
+       SDL_BlitSurface(student_sprite_tab[i+3],NULL,screen,&menu_student_tab[i]);
      }else{
        SDL_BlitSurface(student_sprite_tab[i],NULL,screen,&menu_student_tab[i]);
      }

@@ -63,18 +63,30 @@ void HandleEvents(Input *in){
 	    student_temp.type = 1;
 	    summon_student(student_temp);
 	  }else if(highlight_menu == 2){
-	      student_temp.rate_of_fire = 2;
-	      student_temp.cost = 10;
-	      student_temp.health = 10;
-	      student_temp.damage = 3;
-	      student_temp.speed = 1;
-	      student_temp.range = 3;
-	      student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
-	      student_temp.posy = num_case_y(in->mousey);
-	      student_temp.last_hit = 0;
-	      student_temp.type = 2;
-	      summon_student(student_temp);
-	    }
+	    student_temp.rate_of_fire = 2;
+	    student_temp.cost = 10;
+	    student_temp.health = 10;
+	    student_temp.damage = 3;
+	    student_temp.speed = 1;
+	    student_temp.range = 3;
+	    student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
+	    student_temp.posy = num_case_y(in->mousey);
+	    student_temp.last_hit = 0;
+	    student_temp.type = 2;
+	    summon_student(student_temp);
+	  }else if(highlight_menu == 3){
+	    student_temp.rate_of_fire = 5;
+	    student_temp.cost = 10;
+	    student_temp.health = 7;
+	    student_temp.damage = 7;
+	    student_temp.speed = 1;
+	    student_temp.range = 2;
+	    student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
+	    student_temp.posy = num_case_y(in->mousey);
+	    student_temp.last_hit = 0;
+	    student_temp.type = 3;
+	    summon_student(student_temp);
+	  }
 	}  
       }
     }
@@ -292,7 +304,7 @@ void init_level(){
 int num_student_menu(int posX){
   int i;
 
-  for(i=1;i<=2;i++){
+  for(i=1;i<=3;i++){
     if (posX>(SIZE_SQUARE*(i+1)) && posX<(SIZE_SQUARE*(i+2))){
       return i;
     }
