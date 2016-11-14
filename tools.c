@@ -78,7 +78,7 @@ void HandleEvents(Input *in){
 	    student_temp.rate_of_fire = 5;
 	    student_temp.cost = 10;
 	    student_temp.health = 7;
-	    student_temp.damage = 7;
+	    student_temp.damage = 8;
 	    student_temp.speed = 1;
 	    student_temp.range = 2;
 	    student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
@@ -174,8 +174,8 @@ int in_range_z(int X, int Y){
 }
 
 
-int impact(projectile p, level l){
-  if(l.field[p.posy][(int)(p.posx-0.5)].z.type!=0){
+int impact(projectile p){
+  if(current_level.field[p.posy][(int)(p.posx-0.5)].z.type!=0){
     return (int)(p.posx-0.5);
   }
   return -1;   //no impact
@@ -214,7 +214,7 @@ void launch_projectile(projectile p){
     current_level.projectile_tab[i+1].posy=p.posy;
     current_level.projectile_tab[i+1].damage=p.damage;
     current_level.projectile_tab[i+1].effect=p.effect;
-
+    current_level.projectile_tab[i+1].range=p.range;
   }
 }
 
@@ -268,7 +268,41 @@ void attack(student attacker, int X){
   }
 }
 
-void attack_z(int defender, int X, int Y){
+void projectile_hit(projectile p, int X){
+  int result;
+
+  result = current_level.field[p.posy][X].z.health - p.damage;
+  if (result <= 0){
+    suppr_zombie(X, p.posy);
+  }
+  else{
+    current_level.field[p.posy][X].z.health = result;
+  }
+  if(range == 1){
+    result = current_level.field[p.posy-1][X].z.health - p.damage;
+    if (result <= 0){
+      suppr_zombie(X, p.posy-1);
+    }
+    else{
+      current_level.field[p.posy-1][X].z.health = result;
+    }
+    result = current_level.field[p.posy+1][X].z.health - p.damage;
+    if (result <= 0){
+      suppr_zombie(X, p.posy+1);
+    }
+    else{
+      current_level.field[p.posy+1][X].z.health = result;
+    }
+    result = current_level.field[p.posy][X+1].z.health - p.damage;
+    if (result <= 0){
+      suppr_zombie(X+1, p.posy);
+    }
+    else{
+      current_level.field[p.posy][X+2].z.health = result;
+    }
+  }
+    
+  void attack_z(int defender, int X, int Y){
   int result;
   
   result = current_level.student_tab[defender].health - current_level.field[Y][X].z.damage;
