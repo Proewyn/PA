@@ -25,6 +25,7 @@ int main ()
   SDL_WM_SetCaption("Student versus Zombie", "Student versus Zombie");
   SDL_Surface* screen = SDL_SetVideoMode(1080, 720, 0, 0);
   SDL_Surface *temp;
+  Uint32 frame_time = 0;
   
   /*load grass img*/
  temp=SDL_LoadBMP("img/fond3.bmp");
@@ -105,96 +106,102 @@ SDL_FreeSurface(temp);
  memset(&in, 0, sizeof(in));
  
  while (!in.key[SDLK_LAST] && !in.quit){
-   UpdateEvents(&in);
-   HandleEvents(&in);
-   move_student();
-   move_projectile();
 
-   i=0;
-   while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
-     pos_attack = in_range_s(current_level.student_tab[i]);
-     if (pos_attack != -1){
-       if(SDL_GetTicks()-current_level.student_tab[i].last_hit >= current_level.student_tab[i].rate_of_fire*1000){
-	 current_level.student_tab[i].last_hit = SDL_GetTicks();
-	 if(current_level.student_tab[i].type==1){
-	   printf("cac\n");
-	   attack(current_level.student_tab[i], pos_attack);
-	 }else{
-	   printf("ranged\n");
-	   launch_projectile(i);
+   if((SDL_GetTicks() -frame_time)>=1000/FPS){ //limitation of FPS
+   
+     frame_time=SDL_GetTicks();
+     UpdateEvents(&in);
+     HandleEvents(&in);
+     move_student();
+     move_projectile();
+
+     i=0;
+     while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
+       pos_attack = in_range_s(current_level.student_tab[i]);
+       if (pos_attack != -1){
+	 if(SDL_GetTicks()-current_level.student_tab[i].last_hit >= current_level.student_tab[i].rate_of_fire*1000){
+	   current_level.student_tab[i].last_hit = SDL_GetTicks();
+	   if(current_level.student_tab[i].type==1){
+	     printf("cac\n");
+	     attack(current_level.student_tab[i], pos_attack);
+	   }else{
+	     printf("ranged\n");
+	     launch_projectile(i);
+	   }
 	 }
        }
+       i++;
      }
-     i++;
-   }
-
-   i=0;
-   while (i<PROJECTILE_MAX && current_level.projectile_tab[i].type != 0){
-     pos_attack = impact(current_level.projectile_tab[i]);
-     if(pos_attack != -1){
-       printf("pos_attack: %d\n",pos_attack);
-       projectile_hit(current_level.projectile_tab[i], pos_attack);
-       suppr_projectile(i);
+     
+     i=0;
+     while (i<PROJECTILE_MAX && current_level.projectile_tab[i].type != 0){
+       pos_attack = impact(current_level.projectile_tab[i]);
+       if(pos_attack != -1){
+	 printf("pos_attack: %d\n",pos_attack);
+	 projectile_hit(current_level.projectile_tab[i], pos_attack);
+	 suppr_projectile(i);
+       }
+       i++;
      }
-     i++;
-   }
-   
-   for (j=0;j<FIELD_X;j++){
-     for (i=0;i<FIELD_Y;i++){
-       if (current_level.field[i][j].z.type != 0){
-	 pos_attack = in_range_z(j, i);
-	 if (pos_attack != -1){
-	   if (SDL_GetTicks()-current_level.field[i][j].z.last_hit >= current_level.field[i][j].z.rate_of_fire*1000){
-	     current_level.field[i][j].z.last_hit = SDL_GetTicks();
-	     printf("zombie\n");
-	     attack_z(pos_attack, j, i);
+     
+     for (j=0;j<FIELD_X;j++){
+       for (i=0;i<FIELD_Y;i++){
+	 if (current_level.field[i][j].z.type != 0){
+	   pos_attack = in_range_z(j, i);
+	   if (pos_attack != -1){
+	     if (SDL_GetTicks()-current_level.field[i][j].z.last_hit >= current_level.field[i][j].z.rate_of_fire*1000){
+	       current_level.field[i][j].z.last_hit = SDL_GetTicks();
+	       printf("zombie\n");
+	       attack_z(pos_attack, j, i);
+	     }
 	   }
 	 }
        }
      }
-   }
-   
-   /*draw*/
-   SDL_BlitSurface(grass,NULL,screen,&rcgrass);
-   
-   for (i=0;i<3;i++){
-     if (highlight_menu == i+1){
-       SDL_BlitSurface(student_sprite_tab[i+3],NULL,screen,&menu_student_tab[i]);
-     }else{
-       SDL_BlitSurface(student_sprite_tab[i],NULL,screen,&menu_student_tab[i]);
-     }
-   }
-   
-
-
-   for (j=0;j<FIELD_X;j++){
-     for (i=0;i<FIELD_Y;i++){
-       draw.x = 80+j*SIZE_SQUARE;
-       draw.y = 140+i*SIZE_SQUARE;
-       if (current_level.field[i][j].z.type > 0){
-	 SDL_BlitSurface(zombie_sprite_tab[current_level.field[i][j].z.type], NULL, screen, &draw); 
+     
+     /*draw*/
+     SDL_BlitSurface(grass,NULL,screen,&rcgrass);
+     
+     for (i=0;i<3;i++){
+       if (highlight_menu == i+1){
+	 SDL_BlitSurface(student_sprite_tab[i+3],NULL,screen,&menu_student_tab[i]);
+       }else{
+	 SDL_BlitSurface(student_sprite_tab[i],NULL,screen,&menu_student_tab[i]);
        }
      }
+     
+     
+     
+     for (j=0;j<FIELD_X;j++){
+       for (i=0;i<FIELD_Y;i++){
+	 draw.x = 80+j*SIZE_SQUARE;
+	 draw.y = 140+i*SIZE_SQUARE;
+	 if (current_level.field[i][j].z.type > 0){
+	   SDL_BlitSurface(zombie_sprite_tab[current_level.field[i][j].z.type], NULL, screen, &draw); 
+	 }
+       }
+     }
+     
+     i = 0;
+     while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
+       draw.y=140+(current_level.student_tab[i].posy)*SIZE_SQUARE;
+       draw.x=80+current_level.student_tab[i].posx;
+       SDL_BlitSurface(student_sprite_tab[current_level.student_tab[i].type-1], NULL, screen, &draw);
+       i++;
+     }
+     
+     i=0;
+     while(i<PROJECTILE_MAX && current_level.projectile_tab[i].type!=0){
+       draw.y=180+(current_level.projectile_tab[i].posy)*SIZE_SQUARE;
+       draw.x=90+current_level.projectile_tab[i].posx;
+       SDL_BlitSurface(projectile_sprite_tab[current_level.projectile_tab[i].type-1], NULL, screen, &draw);
+       i++;
+     }
+     
+     
+     SDL_UpdateRect(screen, 0, 0, 0, 0);
+     
    }
-
-   i = 0;
-   while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
-     draw.y=140+(current_level.student_tab[i].posy)*SIZE_SQUARE;
-     draw.x=80+current_level.student_tab[i].posx;
-     SDL_BlitSurface(student_sprite_tab[current_level.student_tab[i].type-1], NULL, screen, &draw);
-     i++;
-   }
-
-   i=0;
-   while(i<PROJECTILE_MAX && current_level.projectile_tab[i].type!=0){
-     draw.y=180+(current_level.projectile_tab[i].posy)*SIZE_SQUARE;
-     draw.x=90+current_level.projectile_tab[i].posx;
-     SDL_BlitSurface(projectile_sprite_tab[current_level.projectile_tab[i].type-1], NULL, screen, &draw);
-     i++;
-   }
-   
-   
-   SDL_UpdateRect(screen, 0, 0, 0, 0);
  }
  
  

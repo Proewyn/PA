@@ -14,6 +14,7 @@
 #define BOTTOM_MENU 180
 #define STUDENT_MAX 100
 #define PROJECTILE_MAX 50
+#define FPS 60
 
 /*structures*/
 
