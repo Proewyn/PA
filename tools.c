@@ -318,19 +318,23 @@ void projectile_hit(projectile p, int X){
     current_level.field[p.posy][X].z.health = result;
   }
   if(p.area == 1){
-    result = current_level.field[p.posy-1][X].z.health - p.damage;
-    if (result <= 0){
-      suppr_zombie(X, p.posy-1);
+    if(p.posy-1>=0){
+      result = current_level.field[p.posy-1][X].z.health - p.damage;
+      if (result <= 0){
+	suppr_zombie(X, p.posy-1);
+      }
+      else{
+	current_level.field[p.posy-1][X].z.health = result;
+      }
     }
-    else{
-      current_level.field[p.posy-1][X].z.health = result;
-    }
-    result = current_level.field[p.posy+1][X].z.health - p.damage;
-    if (result <= 0){
-      suppr_zombie(X, p.posy+1);
-    }
-    else{
-      current_level.field[p.posy+1][X].z.health = result;
+    if(p.posy+1<FIELD_Y){
+      result = current_level.field[p.posy+1][X].z.health - p.damage;
+      if (result <= 0){
+	suppr_zombie(X, p.posy+1);
+      }
+      else{
+	current_level.field[p.posy+1][X].z.health = result;
+      }
     }
     result = current_level.field[p.posy][X+1].z.health - p.damage;
     if (result <= 0){
