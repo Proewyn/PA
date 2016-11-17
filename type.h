@@ -47,6 +47,11 @@ typedef struct Zombie{
   Uint32 last_hit;
 }zombie;
 
+typedef struct Obstacle{
+  int type;
+  int health;
+}obstacle;
+
 typedef struct Projectile{
   int type;
   float speed;
@@ -55,11 +60,13 @@ typedef struct Projectile{
   int damage;
   int effect;
   int area;
+  int start;
+  int range_max;
 ;
 }projectile;
 
 typedef struct Square{
-  bool obstacle; //must init both of them in a function
+  obstacle obstacle; //must init both of them in a function
   zombie z;
 }square;
 
@@ -77,6 +84,7 @@ extern level current_level;
 void UpdateEvents(Input *in);
 void HandleEvents(Input *in);
 void init_zombie();
+void init_obstacle();
 int in_range_s(student s);
 int in_range_z(int X, int Y);
 int impact(projectile p);
@@ -84,9 +92,11 @@ void summon_student(student summon);
 void launch_projectile(int num);
 void suppr_projectile(int num_projectile);
 void suppr_student(int num_student);
+int path_block(int num_student);
 void move_student();
 void move_projectile();
 void suppr_zombie(int X, int Y);
+void suppr_obstacle(int X, int Y);
 void attack(student attacker, int X);
 void projectile_hit(projectile p, int X);
 void attack_z(int defender, int X, int Y);
