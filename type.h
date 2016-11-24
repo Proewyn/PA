@@ -74,6 +74,7 @@ typedef struct Level{
   square** field;
   student* student_tab;
   projectile* projectile_tab;
+  int money;
 }level;
 
 extern int highlight_menu;
@@ -100,7 +101,7 @@ void suppr_obstacle(int X, int Y);
 void attack(student attacker, int X);
 void projectile_hit(projectile p, int X);
 void attack_z(int defender, int X, int Y);
-void init_level();
+void init_level(int num_lvl);
 int num_student_menu(int posX);
 int num_case_x(int posX);
 int num_case_y(int posY);

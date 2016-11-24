@@ -61,7 +61,7 @@ void HandleEvents(Input *in){
 	    student_temp.posy = num_case_y(in->mousey);
 	    student_temp.last_hit = 0;
 	    student_temp.type = 1;
-	    summon_student(student_temp);
+      
 	  }else if(highlight_menu == 2){
 	    student_temp.rate_of_fire = 2;
 	    student_temp.cost = 10;
@@ -73,7 +73,7 @@ void HandleEvents(Input *in){
 	    student_temp.posy = num_case_y(in->mousey);
 	    student_temp.last_hit = 0;
 	    student_temp.type = 2;
-	    summon_student(student_temp);
+	   
 	  }else if(highlight_menu == 3){
 	    student_temp.rate_of_fire = 5;
 	    student_temp.cost = 10;
@@ -85,7 +85,7 @@ void HandleEvents(Input *in){
 	    student_temp.posy = num_case_y(in->mousey);
 	    student_temp.last_hit = 0;
 	    student_temp.type = 3;
-	    summon_student(student_temp);
+	  
 	  }else if(highlight_menu == 4){
 	    student_temp.rate_of_fire = 5;
 	    student_temp.cost = 10;
@@ -97,11 +97,16 @@ void HandleEvents(Input *in){
 	    student_temp.posy = num_case_y(in->mousey);
 	    student_temp.last_hit = 0;
 	    student_temp.type = 4;
-	    summon_student(student_temp);
+	   
 	  }
-	}  
+	  if( student_temp.cost <= current_level.money){
+	    summon_student(student_temp);
+	    current_level.money=current_level.money-student_temp.cost;
+	  }
+	}
       }
     }
+    printf("money %d\n", current_level.money);
     printf("%d %d\n", in->mousex, in->mousey);
   }
 }
@@ -451,14 +456,25 @@ void attack_z(int defender, int X, int Y){
 }
 
 
-void init_level(){
+void init_level(int num_lvl){
   int i,j;
   FILE* fichier = NULL;
-  //char chaine[3]="";
-  fichier = fopen("level1.txt", "r");
+  char chaine[4];
   int trash;
+  switch(num_lvl){
+    case 1:
+      fichier = fopen("level1.txt", "r");
+      break;
+    case 2:
+      fichier = fopen("level2.txt", "r");
+      break;
+    default:
+      break;
+  }
 
   if (fichier != NULL){
+    current_level.money=atoi(fgets(chaine,4*sizeof(char),fichier));
+    trash=fgetc(fichier);
     for(j=0;j<FIELD_X;j++){
       for(i=0;i<FIELD_Y;i++){;
 	current_level.field[i][j].obstacle.type=fgetc(fichier)-48; //-48 valeur ASCII=>int

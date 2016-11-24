@@ -123,7 +123,7 @@ int main ()
    menu_student_tab[i].y=0;
  }
  
- init_level();
+ init_level(1);
  init_zombie();
  init_obstacle();
  
