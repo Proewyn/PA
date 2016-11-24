@@ -61,7 +61,6 @@ void HandleEvents(Input *in){
 	    student_temp.posy = num_case_y(in->mousey);
 	    student_temp.last_hit = 0;
 	    student_temp.type = 1;
-      
 	  }else if(highlight_menu == 2){
 	    student_temp.rate_of_fire = 2;
 	    student_temp.cost = 10;
@@ -73,7 +72,6 @@ void HandleEvents(Input *in){
 	    student_temp.posy = num_case_y(in->mousey);
 	    student_temp.last_hit = 0;
 	    student_temp.type = 2;
-	   
 	  }else if(highlight_menu == 3){
 	    student_temp.rate_of_fire = 5;
 	    student_temp.cost = 10;
@@ -85,7 +83,6 @@ void HandleEvents(Input *in){
 	    student_temp.posy = num_case_y(in->mousey);
 	    student_temp.last_hit = 0;
 	    student_temp.type = 3;
-	  
 	  }else if(highlight_menu == 4){
 	    student_temp.rate_of_fire = 5;
 	    student_temp.cost = 10;
@@ -97,13 +94,12 @@ void HandleEvents(Input *in){
 	    student_temp.posy = num_case_y(in->mousey);
 	    student_temp.last_hit = 0;
 	    student_temp.type = 4;
-	   
 	  }
 	  if( student_temp.cost <= current_level.money){
 	    summon_student(student_temp);
 	    current_level.money=current_level.money-student_temp.cost;
 	  }
-	}
+	}  
       }
     }
     printf("money %d\n", current_level.money);
@@ -276,7 +272,6 @@ void launch_projectile(int num){
     i++;
   }
   if (i<PROJECTILE_MAX-1){
-    printf("projectile %d\n",i);
     current_level.projectile_tab[i].type=p.type;
     current_level.projectile_tab[i].speed=p.speed;
     current_level.projectile_tab[i].posx=p.posx;
@@ -471,12 +466,12 @@ void init_level(int num_lvl){
     default:
       break;
   }
-
+  
   if (fichier != NULL){
     current_level.money=atoi(fgets(chaine,4*sizeof(char),fichier));
     trash=fgetc(fichier);
     for(j=0;j<FIELD_X;j++){
-      for(i=0;i<FIELD_Y;i++){;
+      for(i=0;i<FIELD_Y;i++){
 	current_level.field[i][j].obstacle.type=fgetc(fichier)-48; //-48 valeur ASCII=>int
 	current_level.field[i][j].z.type=fgetc(fichier)-48;
 	trash=fgetc(fichier); // récupére les \n et fais avancer le curseur à la ligne suivante
@@ -506,3 +501,65 @@ int num_case_y(int posY){
   return (int)(posY-BOTTOM_MENU)/SIZE_SQUARE;
 }
 
+int etat(){
+  int i, j, result=1;
+
+  for(j=0;j<FIELD_X;j++){
+    for(i=0;i<FIELD_Y;i++){
+      if (current_level.field[i][j].z.type != 0){
+	result = 0;
+      }
+    }
+  }
+  if (result == 0 && current_level.money<10 && current_level.student_tab[0].type == 0){
+    result = -1;
+  }
+  return result;
+}
+
+void global_move(){
+  int pos_attack, i, j;
+  
+  for (j=0;j<FIELD_X;j++){
+    for (i=0;i<FIELD_Y;i++){
+      if (current_level.field[i][j].z.type != 0){
+	pos_attack = in_range_z(j, i);
+	if (pos_attack != -1){
+	  if (SDL_GetTicks()-current_level.field[i][j].z.last_hit >= current_level.field[i][j].z.rate_of_fire*1000){
+	    current_level.field[i][j].z.last_hit = SDL_GetTicks();
+	    printf("zombie\n");
+	    attack_z(pos_attack, j, i);
+	  }
+	}
+      }
+    }
+  }
+  
+  i=0;
+  while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
+    pos_attack = in_range_s(current_level.student_tab[i]);
+    if (pos_attack != -1){
+      if(SDL_GetTicks()-current_level.student_tab[i].last_hit >= current_level.student_tab[i].rate_of_fire*1000){
+	current_level.student_tab[i].last_hit = SDL_GetTicks();
+	if(current_level.student_tab[i].type==1){
+	  printf("cac\n");
+	  attack(current_level.student_tab[i], pos_attack);
+	}else{
+	  printf("ranged\n");
+	  launch_projectile(i);
+	}
+      }
+    }
+    i++;
+  }
+  
+  i=0;
+  while (i<PROJECTILE_MAX && current_level.projectile_tab[i].type != 0){
+    pos_attack = impact(current_level.projectile_tab[i]);
+    if(pos_attack != -1){
+      projectile_hit(current_level.projectile_tab[i], pos_attack);
+      suppr_projectile(i);
+    }
+    i++;
+  } 
+}

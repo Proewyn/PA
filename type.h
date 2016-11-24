@@ -105,4 +105,6 @@ void init_level(int num_lvl);
 int num_student_menu(int posX);
 int num_case_x(int posX);
 int num_case_y(int posY);
+int etat();
+void global_move();
 #endif
