@@ -35,75 +35,147 @@ void UpdateEvents(Input* in)
 }
 
 void HandleEvents(Input *in){
+  int i;
+
   if (in->key[SDLK_ESCAPE]){
     in->key[SDLK_LAST] = 1;
   }
   if (in->mousebuttons[1]){
     in->mousebuttons[1]=0;
-    if (in->mousey < BOTTOM_MENU){
-      highlight_menu = num_student_menu(in->mousex);
-      if (highlight_menu != 0){
-	is_select = true;
+    if (menu_num == 0){
+      if(in->mousex > 470 && in->mousex < 675){
+	if(in->mousey > 385 && in->mousey < 412){
+	  menu_num = 4;
+	}
+	if(in->mousey > 460 && in->mousey < 489){
+	  menu_num = 4;
+	}
+	if(in->mousey > 539 && in->mousey < 565){
+	  menu_num = 2;
+	}
+	if(in->mousey > 613 && in->mousey < 645){
+	  in->quit=1;
+	}
       }
     }
-    else{
-      if (is_select){
-	if (in->mousey<=BOTTOM_MENU+5*SIZE_SQUARE && in->mousex>=SIZE_SQUARE && in->mousex<=2*SIZE_SQUARE){
-	  student student_temp;
-	  if (highlight_menu == 1){
-	    student_temp.rate_of_fire = 1;
-	    student_temp.cost = 10;
-	    student_temp.health = 15;
-	    student_temp.damage = 2;
-	    student_temp.speed = 5;
-	    student_temp.range = 1;
-	    student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
-	    student_temp.posy = num_case_y(in->mousey);
-	    student_temp.last_hit = 0;
-	    student_temp.type = 1;
-	  }else if(highlight_menu == 2){
-	    student_temp.rate_of_fire = 2;
-	    student_temp.cost = 10;
-	    student_temp.health = 10;
-	    student_temp.damage = 12;
-	    student_temp.speed = 3;
-	    student_temp.range = 3;
-	    student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
-	    student_temp.posy = num_case_y(in->mousey);
-	    student_temp.last_hit = 0;
-	    student_temp.type = 2;
-	  }else if(highlight_menu == 3){
-	    student_temp.rate_of_fire = 5;
-	    student_temp.cost = 10;
-	    student_temp.health = 7;
-	    student_temp.damage = 7;
-	    student_temp.speed = 1;
-	    student_temp.range = 2;
-	    student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
-	    student_temp.posy = num_case_y(in->mousey);
-	    student_temp.last_hit = 0;
-	    student_temp.type = 3;
-	  }else if(highlight_menu == 4){
-	    student_temp.rate_of_fire = 5;
-	    student_temp.cost = 10;
-	    student_temp.health = 1;
-	    student_temp.damage = 1;
-	    student_temp.speed = 2;
-	    student_temp.range = 2;
-	    student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
-	    student_temp.posy = num_case_y(in->mousey);
-	    student_temp.last_hit = 0;
-	    student_temp.type = 4;
-	  }
-	  if( student_temp.cost <= current_level.money){
-	    summon_student(student_temp);
-	    current_level.money=current_level.money-student_temp.cost;
-	  }
-	}  
+    if (menu_num == 2){
+      if(in->mousey > 683 && in->mousey < 700 && in->mousex > 50 && in->mousex < 195){
+	menu_num = 0;
       }
     }
-    printf("money %d\n", current_level.money);
-    printf("%d %d\n", in->mousex, in->mousey);
+    if (menu_num == 3){
+      if (game_state == 1){
+	if(in->mousey > 605 && in->mousey < 630){
+	  if(in->mousex > 75 && in->mousex < 200){
+	    menu_num = 4;
+	  }
+	  if(in->mousex > 900 && in->mousex < 990){
+	    in->quit=1;
+	  }
+	}
+      }else if(game_state == -1){
+	if(in->mousey > 610 && in->mousey < 630){
+	  if(in->mousex > 35 && in->mousex < 145){
+	    menu_num = 4;
+	  }
+	  if(in->mousex > 945 && in->mousex < 1025){
+	    in->quit=1;
+	  }
+	}
+      }
+    }
+    if (menu_num == 4){
+      if(in->mousex > 360 && in->mousex < 444){
+	if(in->mousey > 192 && in->mousey < 210){
+	  init_level(1);
+	  init_zombie();
+	  init_obstacle();
+	  menu_num = 1;
+	}
+	if(in->mousey > 237 && in->mousey < 253){
+	  init_level(2);
+	  init_zombie();
+	  init_obstacle();
+	  menu_num = 1;
+	}
+      }
+    }
+    if (menu_num == 1){
+      if (in->mousey > 660 && in->mousey < 680 && in->mousex > 15 && in->mousex < 205){
+	menu_num = 0;
+	is_select = false;
+	highlight_menu = 0;
+	for (i=0;i<STUDENT_MAX;i++){
+	  current_level.student_tab[i].health=0;
+	}
+	for (i=0;i<PROJECTILE_MAX;i++){
+	  current_level.projectile_tab[i].type=0;
+	}
+      }
+      if (in->mousey < BOTTOM_MENU){
+	highlight_menu = num_student_menu(in->mousex);
+	if (highlight_menu != 0){
+	  is_select = true;
+	}
+      }
+      else{
+	if (is_select){
+	  if (in->mousey<=BOTTOM_MENU+5*SIZE_SQUARE && in->mousex>=SIZE_SQUARE && in->mousex<=2*SIZE_SQUARE){
+	    student student_temp;
+	    if (highlight_menu == 1){
+	      student_temp.rate_of_fire = 1;
+	      student_temp.cost = 10;
+	      student_temp.health = 15;
+	      student_temp.damage = 2;
+	      student_temp.speed = 5;
+	      student_temp.range = 1;
+	      student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
+	      student_temp.posy = num_case_y(in->mousey);
+	      student_temp.last_hit = 0;
+	      student_temp.type = 1;
+	    }else if(highlight_menu == 2){
+	      student_temp.rate_of_fire = 2;
+	      student_temp.cost = 10;
+	      student_temp.health = 10;
+	      student_temp.damage = 12;
+	      student_temp.speed = 3;
+	      student_temp.range = 3;
+	      student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
+	      student_temp.posy = num_case_y(in->mousey);
+	      student_temp.last_hit = 0;
+	      student_temp.type = 2;
+	    }else if(highlight_menu == 3){
+	      student_temp.rate_of_fire = 5;
+	      student_temp.cost = 10;
+	      student_temp.health = 7;
+	      student_temp.damage = 7;
+	      student_temp.speed = 1;
+	      student_temp.range = 2;
+	      student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
+	      student_temp.posy = num_case_y(in->mousey);
+	      student_temp.last_hit = 0;
+	      student_temp.type = 3;
+	    }else if(highlight_menu == 4){
+	      student_temp.rate_of_fire = 5;
+	      student_temp.cost = 10;
+	      student_temp.health = 1;
+	      student_temp.damage = 1;
+	      student_temp.speed = 2;
+	      student_temp.range = 2;
+	      student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
+	      student_temp.posy = num_case_y(in->mousey);
+	      student_temp.last_hit = 0;
+	      student_temp.type = 4;
+	    }
+	    if( student_temp.cost <= current_level.money){
+	      summon_student(student_temp);
+	      current_level.money=current_level.money-student_temp.cost;
+	    }
+	  }
+	}
+      }
+      printf("%d %d\n", in->mousex, in->mousey);
+    }
   }
 }
 
@@ -511,7 +583,7 @@ int etat(){
       }
     }
   }
-  if (result == 0 && current_level.money<10 && current_level.student_tab[0].type == 0){
+  if (result == 0 && current_level.money<10 && current_level.student_tab[0].type == 0 && current_level.projectile_tab[0].type == 0){
     result = -1;
   }
   return result;

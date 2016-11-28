@@ -3,11 +3,11 @@
 
 /* definition of global variables*/
 
-SDL_Surface *grass,*fond, *barricade, *student_base, *zombie_sprite_tab[5], *student_sprite_tab[10], *projectile_sprite_tab[5], *number_tab[10], *defeat, *victory, *coin;
+SDL_Surface *grass,*fond, *barricade, *student_base, *zombie_sprite_tab[5], *student_sprite_tab[10], *projectile_sprite_tab[5], *number_tab[10], *defeat, *victory, *coin, *menu, *bestiaire, *select_lvl;
 
 SDL_Rect rcgrass, rcstudent_baserc, rczombie_base, rczombie_baserc, draw, menu_student_tab[5], rcchiffre, rccoin;
 
-int colorkey, i, j, highlight_menu, game_state, money_draw, money_tab[4];
+int colorkey, i, j, highlight_menu, game_state, money_draw, money_tab[4], menu_num=0;
 
 level current_level;
 
@@ -28,6 +28,18 @@ int main ()
   Uint32 frame_time = 0;
   
  /*load element*/
+ temp=SDL_LoadBMP("img/menu.bmp");
+ menu=SDL_DisplayFormat(temp);
+ SDL_FreeSurface(temp);
+
+ temp=SDL_LoadBMP("img/select_lvl.bmp");
+ select_lvl=SDL_DisplayFormat(temp);
+ SDL_FreeSurface(temp);
+
+ temp=SDL_LoadBMP("img/bestiaire.bmp");
+ bestiaire=SDL_DisplayFormat(temp);
+ SDL_FreeSurface(temp);
+
  temp=SDL_LoadBMP("img/fond3.bmp");
  grass=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
@@ -186,10 +198,6 @@ int main ()
  rcchiffre.x=70;
  rcchiffre.y=45;
  
- init_level(2);
- init_zombie();
- init_obstacle();
- 
  Input in;
  memset(&in, 0, sizeof(in));
  
@@ -205,88 +213,101 @@ int main ()
      global_move();
      game_state = etat();
 
-     if (game_state == 0){
-       /*global draw*/
-       SDL_BlitSurface(fond,NULL,screen,NULL);
-       SDL_BlitSurface(grass,NULL,screen,&rcgrass);
-       
-       /*draw menu*/
-       for (i=0;i<4;i++){
-	 if (highlight_menu == i+1){
-	   SDL_BlitSurface(student_sprite_tab[i+4],NULL,screen,&menu_student_tab[i]);
-	 }else{
-	   SDL_BlitSurface(student_sprite_tab[i],NULL,screen,&menu_student_tab[i]);
-	 }
-       }
-
-       money_draw = current_level.money;
-       i = 0;
-       while (money_draw != 0){
-	 money_tab[3-i]=money_draw%10;
-	 money_draw = (int)money_draw/10;
-	 i++;
-       }
-       for (j=i; j<=3; j++){
-	 money_tab[3-j]=0;
-       }
-       SDL_BlitSurface(coin, NULL, screen, &rccoin);
-       for (i=0; i<4; i++){
-	 SDL_BlitSurface(number_tab[money_tab[i]], NULL, screen, &rcchiffre);
-	 rcchiffre.x = rcchiffre.x+30;
-       }
-       rcchiffre.x = 70;
-       
-       /*draw zombie*/
-       for (j=0;j<FIELD_X;j++){
-	 for (i=0;i<FIELD_Y;i++){
-	   draw.x = 80+j*SIZE_SQUARE;
-	   draw.y = 140+i*SIZE_SQUARE;
-	   if (current_level.field[i][j].z.type > 0){
-	     SDL_BlitSurface(zombie_sprite_tab[current_level.field[i][j].z.type], NULL, screen, &draw); 
+     if (menu_num == 0){
+       SDL_BlitSurface(menu,NULL,screen,NULL);
+     }
+     if (menu_num == 2){
+       SDL_BlitSurface(bestiaire,NULL,screen,NULL);
+     }
+     if (menu_num == 4){
+       SDL_BlitSurface(select_lvl,NULL,screen,NULL);
+     }
+     if (menu_num == 1){
+       if (game_state == 0){
+	 /*global draw*/
+	 SDL_BlitSurface(fond,NULL,screen,NULL);
+	 SDL_BlitSurface(grass,NULL,screen,&rcgrass);
+	 
+	 /*draw menu*/
+	 for (i=0;i<4;i++){
+	   if (highlight_menu == i+1){
+	     SDL_BlitSurface(student_sprite_tab[i+4],NULL,screen,&menu_student_tab[i]);
+	   }else{
+	     SDL_BlitSurface(student_sprite_tab[i],NULL,screen,&menu_student_tab[i]);
 	   }
 	 }
-       }
-       
-       /*draw obstacle*/
-       for (j=0;j<FIELD_X;j++){
-	 for (i=0;i<FIELD_Y;i++){
-	   draw.x = 90+j*SIZE_SQUARE;
-	   draw.y = 180+i*SIZE_SQUARE;
-	   if (current_level.field[i][j].obstacle.type != 0){
-	     SDL_BlitSurface(barricade, NULL, screen, &draw); 
+	 
+	 money_draw = current_level.money;
+	 i = 0;
+	 while (money_draw != 0){
+	   money_tab[3-i]=money_draw%10;
+	   money_draw = (int)money_draw/10;
+	   i++;
+	 }
+	 for (j=i; j<=3; j++){
+	   money_tab[3-j]=0;
+	 }
+	 SDL_BlitSurface(coin, NULL, screen, &rccoin);
+	 for (i=0; i<4; i++){
+	   SDL_BlitSurface(number_tab[money_tab[i]], NULL, screen, &rcchiffre);
+	   rcchiffre.x = rcchiffre.x+30;
+	 }
+	 rcchiffre.x = 70;
+	 
+	 /*draw zombie*/
+	 for (j=0;j<FIELD_X;j++){
+	   for (i=0;i<FIELD_Y;i++){
+	     draw.x = 80+j*SIZE_SQUARE;
+	     draw.y = 140+i*SIZE_SQUARE;
+	     if (current_level.field[i][j].z.type > 0){
+	       SDL_BlitSurface(zombie_sprite_tab[current_level.field[i][j].z.type], NULL, screen, &draw); 
+	     }
 	   }
 	 }
-       }
-       
-       /*draw student*/
-       i = 0;
-       while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
-	 draw.y=140+(current_level.student_tab[i].posy)*SIZE_SQUARE;
-	 draw.x=80+current_level.student_tab[i].posx;
-	 SDL_BlitSurface(student_sprite_tab[current_level.student_tab[i].type-1], NULL, screen, &draw);
-	 i++;
-       }
-       
-       /*draw projectile*/
-       i=0;
-       while(i<PROJECTILE_MAX && current_level.projectile_tab[i].type!=0){
-	 draw.y=200+(current_level.projectile_tab[i].posy)*SIZE_SQUARE;
-	 draw.x=90+current_level.projectile_tab[i].posx;
-	 SDL_BlitSurface(projectile_sprite_tab[current_level.projectile_tab[i].type-1], NULL, screen, &draw);
-	 i++;
-       }
-     }else{
-       if (game_state == 1){
-	 SDL_BlitSurface(victory, NULL, screen, NULL);
+	 
+	 /*draw obstacle*/
+	 for (j=0;j<FIELD_X;j++){
+	   for (i=0;i<FIELD_Y;i++){
+	     draw.x = 90+j*SIZE_SQUARE;
+	     draw.y = 180+i*SIZE_SQUARE;
+	     if (current_level.field[i][j].obstacle.type != 0){
+	       SDL_BlitSurface(barricade, NULL, screen, &draw); 
+	     }
+	   }
+	 }
+	 
+	 /*draw student*/
+	 i = 0;
+	 while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
+	   draw.y=140+(current_level.student_tab[i].posy)*SIZE_SQUARE;
+	   draw.x=80+current_level.student_tab[i].posx;
+	   SDL_BlitSurface(student_sprite_tab[current_level.student_tab[i].type-1], NULL, screen, &draw);
+	   i++;
+	 }
+	 
+	 /*draw projectile*/
+	 i=0;
+	 while(i<PROJECTILE_MAX && current_level.projectile_tab[i].type!=0){
+	   draw.y=200+(current_level.projectile_tab[i].posy)*SIZE_SQUARE;
+	   draw.x=90+current_level.projectile_tab[i].posx;
+	   SDL_BlitSurface(projectile_sprite_tab[current_level.projectile_tab[i].type-1], NULL, screen, &draw);
+	   i++;
+	 }
        }else{
-	 SDL_BlitSurface(defeat, NULL, screen, NULL);
+	 printf("game state:%d\n", game_state);
+	 if (game_state == 1){
+	   menu_num = 3;
+	   SDL_BlitSurface(victory, NULL, screen, NULL);
+	 }else{
+	   menu_num = 3;
+	   SDL_BlitSurface(defeat, NULL, screen, NULL);
+	 }
        }
      }
-
      SDL_UpdateRect(screen, 0, 0, 0, 0);     
    }
  }
-   
+ 
  SDL_Quit();
  
  return EXIT_SUCCESS;

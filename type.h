@@ -77,7 +77,7 @@ typedef struct Level{
   int money;
 }level;
 
-extern int highlight_menu;
+extern int highlight_menu, menu_num, game_state;
 extern level current_level;
 
 /*declaration of function*/
