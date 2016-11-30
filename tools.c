@@ -1,6 +1,7 @@
 #include "type.h"
 
 bool is_select=false;
+int num_selected_level;
 
 
 void UpdateEvents(Input* in)
@@ -42,10 +43,15 @@ void HandleEvents(Input *in){
   }
   if (in->mousebuttons[1]){
     in->mousebuttons[1]=0;
-    if (menu_num == 0){
+    if (menu_num == 0){  //main_menu
       if(in->mousex > 470 && in->mousex < 675){
 	if(in->mousey > 385 && in->mousey < 412){
-	  menu_num = 4;
+	  menu_num = 4; 
+	  for(i=0;i<NB_LEVELS;i++){
+	    progress[i][0]=0;
+	    progress[i][1]=0;
+	  }
+	  save_progress();
 	}
 	if(in->mousey > 460 && in->mousey < 489){
 	  menu_num = 4;
@@ -58,14 +64,20 @@ void HandleEvents(Input *in){
 	}
       }
     }
-    if (menu_num == 2){
+    if (menu_num == 2){// bestiary
       if(in->mousey > 683 && in->mousey < 700 && in->mousex > 50 && in->mousex < 195){
 	menu_num = 0;
       }
     }
-    if (menu_num == 3){
-      if (game_state == 1){
+    if (menu_num == 3){ //end of game screen
+      if (game_state == 1){ //victory
 	if(in->mousey > 605 && in->mousey < 630){
+
+	  /*save progression*/
+	  progress[num_selected_level-1][0]=1;
+	  progress[num_selected_level-1][1]=current_level.money;
+	  save_progress();
+
 	  if(in->mousex > 75 && in->mousex < 200){
 	    menu_num = 4;
 	  }
@@ -73,8 +85,12 @@ void HandleEvents(Input *in){
 	    in->quit=1;
 	  }
 	}
-      }else if(game_state == -1){
+      }else if(game_state == -1){ //defeat
 	if(in->mousey > 610 && in->mousey < 630){
+	  progress[num_selected_level-1][0]=1;
+	  progress[num_selected_level-1][1]=current_level.money;
+	  save_progress();
+
 	  if(in->mousex > 35 && in->mousex < 145){
 	    menu_num = 4;
 	  }
@@ -84,23 +100,25 @@ void HandleEvents(Input *in){
 	}
       }
     }
-    if (menu_num == 4){
+    if (menu_num == 4){ //level_selection
       if(in->mousex > 360 && in->mousex < 444){
 	if(in->mousey > 192 && in->mousey < 210){
 	  init_level(1);
+	  num_selected_level = 1;
 	  init_zombie();
 	  init_obstacle();
 	  menu_num = 1;
 	}
 	if(in->mousey > 237 && in->mousey < 253){
 	  init_level(2);
+	  num_selected_level = 2;
 	  init_zombie();
 	  init_obstacle();
 	  menu_num = 1;
 	}
       }
     }
-    if (menu_num == 1){
+    if (menu_num == 1){  //game
       if (in->mousey > 660 && in->mousey < 680 && in->mousex > 15 && in->mousex < 205){
 	menu_num = 0;
 	is_select = false;
@@ -120,7 +138,7 @@ void HandleEvents(Input *in){
       }
       else{
 	if (is_select){
-	  if (in->mousey<=BOTTOM_MENU+5*SIZE_SQUARE && in->mousex>=SIZE_SQUARE && in->mousex<=2*SIZE_SQUARE){
+	  if (in->mousey<BOTTOM_MENU+5*SIZE_SQUARE && in->mousex>SIZE_SQUARE && in->mousex<=2*SIZE_SQUARE){
 	    student student_temp;
 	    if (highlight_menu == 1){
 	      student_temp.rate_of_fire = 1;
@@ -499,13 +517,16 @@ void projectile_hit(projectile p, int X){
 	  current_level.field[p.posy+1][X].z.health = result;
 	}
       }
+
       result = current_level.field[p.posy][X+1].z.health - p.damage;
       if (result <= 0){
 	suppr_zombie(X+1, p.posy);
       }
       else{
-	current_level.field[p.posy][X+2].z.health = result;
-      }
+	if(p.posx+2<FIELD_X){
+	  current_level.field[p.posy][X+2].z.health = result;
+	}
+      }    
     }
   }
 }
@@ -634,4 +655,42 @@ void global_move(){
     }
     i++;
   } 
+}
+
+void read_save(){
+  FILE* fichier = NULL;
+  int trash,i;
+  int donne[4]={0};
+  
+  fichier = fopen ("save.txt","r");
+  
+  if (fichier != NULL){
+    for(i=0;i<NB_LEVELS;i++){
+      fscanf(fichier,"%d %d",&donne[1], &donne[2]);
+      progress[i][0]=donne[1];
+      progress[i][1]=donne[2];
+    }
+  }
+  (void)trash;
+  fclose(fichier);
+}
+
+void save_progress(){
+  FILE* fichier = NULL;
+  int i;
+  char c[4];
+  
+  fichier = fopen("save.txt","w");
+  
+  if (fichier != NULL){
+    for(i=0;i<NB_LEVELS;i++){
+      fputc(progress[i][0]+48,fichier);
+      fputc(' ',fichier);
+      sprintf(c,"%04d",progress[i][1]);
+      fputs(c,fichier);
+      fputc('\n',fichier);
+    }
+  }
+
+  fclose(fichier);
 }

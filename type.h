@@ -15,6 +15,7 @@
 #define STUDENT_MAX 100
 #define PROJECTILE_MAX 50
 #define FPS 60
+#define NB_LEVELS 2
 
 /*structures*/
 
@@ -77,7 +78,7 @@ typedef struct Level{
   int money;
 }level;
 
-extern int highlight_menu, menu_num, game_state;
+extern int highlight_menu, menu_num, game_state, progress[NB_LEVELS][2];
 extern level current_level;
 
 /*declaration of function*/
@@ -107,4 +108,6 @@ int num_case_x(int posX);
 int num_case_y(int posY);
 int etat();
 void global_move();
+void read_save();
+void save_progress();
 #endif

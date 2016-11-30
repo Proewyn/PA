@@ -11,6 +11,8 @@ int colorkey, i, j, highlight_menu, game_state, money_draw, money_tab[4], menu_n
 
 level current_level;
 
+int progress[NB_LEVELS][2];
+
 
 int main ()
 {
@@ -191,6 +193,9 @@ int main ()
    menu_student_tab[i].x=170+SIZE_SQUARE*i;
    menu_student_tab[i].y=0;
  }
+
+ /*init progress from save_file*/
+ read_save();
 
  rccoin.x=30;
  rccoin.y=50;
