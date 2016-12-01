@@ -595,7 +595,7 @@ int num_case_y(int posY){
 }
 
 int etat(){
-  int i, j, result=1;
+  int i, j, all_blocked,result=1;
 
   for(j=0;j<FIELD_X;j++){
     for(i=0;i<FIELD_Y;i++){
@@ -604,9 +604,23 @@ int etat(){
       }
     }
   }
-  if (result == 0 && current_level.money<10 && current_level.student_tab[0].type == 0 && current_level.projectile_tab[0].type == 0){
-    result = -1;
+  i=0;
+  all_blocked=1;
+  while(current_level.student_tab[i].type!=0){
+    if(path_block(i)==0){
+      all_blocked=0;
+    }
+    i++;
   }
+
+
+  if ((result == 0 && current_level.money<10 && current_level.student_tab[0].type == 0 && current_level.projectile_tab[0].type == 0) || (result == 0 && all_blocked==1 && current_level.money<10 && current_level.projectile_tab[0].type == 0)){
+    result = -1;
+    printf("bloqué\n");
+  }
+
+ 
+
   return result;
 }
 
