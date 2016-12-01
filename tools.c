@@ -87,7 +87,7 @@ void HandleEvents(Input *in){
 	}
       }else if(game_state == -1){ //defeat
 	if(in->mousey > 610 && in->mousey < 630){
-	  progress[num_selected_level-1][0]=1;
+	  progress[num_selected_level-1][0]=0;
 	  progress[num_selected_level-1][1]=current_level.money;
 	  save_progress();
 
@@ -101,6 +101,15 @@ void HandleEvents(Input *in){
       }
     }
     if (menu_num == 4){ //level_selection
+      if(in->mousex > 35 && in->mousex < 185 && in->mousey > 640 && in->mousey < 670){
+	menu_num = 0;
+      }
+      for(i=0;i<STUDENT_MAX;i++){
+	current_level.student_tab[i].type = 0;
+      }
+      for (i=0;i<PROJECTILE_MAX;i++){
+	current_level.projectile_tab[i].type=0;
+      }
       if(in->mousex > 360 && in->mousex < 444){
 	if(in->mousey > 192 && in->mousey < 210){
 	  init_level(1);
@@ -109,12 +118,32 @@ void HandleEvents(Input *in){
 	  init_obstacle();
 	  menu_num = 1;
 	}
-	if(in->mousey > 237 && in->mousey < 253){
-	  init_level(2);
-	  num_selected_level = 2;
-	  init_zombie();
-	  init_obstacle();
-	  menu_num = 1;
+	if(progress[0][0]==1){
+	  if(in->mousey > 237 && in->mousey < 253){
+	    init_level(2);
+	    num_selected_level = 2;
+	    init_zombie();
+	    init_obstacle();
+	    menu_num = 1;
+	  }
+	}
+	if(progress[1][0]==1){
+	  if(in->mousey > 277 && in->mousey < 300){
+	    init_level(3);
+	    num_selected_level = 3;
+	    init_zombie();
+	    init_obstacle();
+	    menu_num = 1;
+	  }
+	}
+	if(progress[2][0]==1){
+	  if(in->mousey > 322 && in->mousey < 344){
+	    init_level(4);
+	    num_selected_level = 4;
+	    init_zombie();
+	    init_obstacle();
+	    menu_num = 1;
+	  }
 	}
       }
     }
@@ -123,12 +152,6 @@ void HandleEvents(Input *in){
 	menu_num = 0;
 	is_select = false;
 	highlight_menu = 0;
-	for (i=0;i<STUDENT_MAX;i++){
-	  current_level.student_tab[i].health=0;
-	}
-	for (i=0;i<PROJECTILE_MAX;i++){
-	  current_level.projectile_tab[i].type=0;
-	}
       }
       if (in->mousey < BOTTOM_MENU){
 	highlight_menu = num_student_menu(in->mousex);
@@ -556,6 +579,12 @@ void init_level(int num_lvl){
     case 2:
       fichier = fopen("level2.txt", "r");
       break;
+    case 3:
+      fichier = fopen("level3.txt", "r");
+      break;
+    case 4:
+      fichier = fopen("level4.txt", "r");
+      break;
     default:
       break;
   }
@@ -596,7 +625,7 @@ int num_case_y(int posY){
 
 int etat(){
   int i, j, all_blocked,result=1;
-
+  
   for(j=0;j<FIELD_X;j++){
     for(i=0;i<FIELD_Y;i++){
       if (current_level.field[i][j].z.type != 0){
@@ -612,14 +641,10 @@ int etat(){
     }
     i++;
   }
-
-
+  
   if ((result == 0 && current_level.money<10 && current_level.student_tab[0].type == 0 && current_level.projectile_tab[0].type == 0) || (result == 0 && all_blocked==1 && current_level.money<10 && current_level.projectile_tab[0].type == 0)){
     result = -1;
-    printf("bloqué\n");
   }
-
- 
 
   return result;
 }

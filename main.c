@@ -3,7 +3,7 @@
 
 /* definition of global variables*/
 
-SDL_Surface *grass,*fond, *barricade, *student_base, *zombie_sprite_tab[5], *student_sprite_tab[10], *projectile_sprite_tab[5], *number_tab[10], *defeat, *victory, *coin, *menu, *bestiaire, *select_lvl;
+SDL_Surface *grass,*fond, *barricade, *student_base, *zombie_sprite_tab[5], *student_sprite_tab[10], *projectile_sprite_tab[5], *number_tab[10], *defeat, *victory, *coin, *menu, *bestiaire, *select_lvl, *lock;
 
 SDL_Rect rcgrass, rcstudent_baserc, rczombie_base, rczombie_baserc, draw, menu_student_tab[5], rcchiffre, rccoin;
 
@@ -64,6 +64,10 @@ int main ()
 
  temp=SDL_LoadBMP("img/defeat.bmp");
  defeat=SDL_DisplayFormat(temp);
+ SDL_FreeSurface(temp);
+
+ temp=SDL_LoadBMP("img/lock.bmp");
+ lock=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
  
  /* load student*/
@@ -178,6 +182,7 @@ int main ()
  SDL_SetColorKey(projectile_sprite_tab[1], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 255, 255, 255));
  SDL_SetColorKey(projectile_sprite_tab[2], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 255, 255, 255));
  SDL_SetColorKey(barricade, SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 255, 255, 255));
+ SDL_SetColorKey(lock, SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 255, 255, 255));
  SDL_SetColorKey(coin, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  for (i = 0 ; i < 10 ; i++)
   {
@@ -218,22 +223,20 @@ int main ()
      global_move();
      game_state = etat();
 
-     if (menu_num == 0){
+     if (menu_num == 0){  //main menu
        SDL_BlitSurface(menu,NULL,screen,NULL);
      }
-     if (menu_num == 2){
+     if (menu_num == 2){  //bestiaire
        SDL_BlitSurface(bestiaire,NULL,screen,NULL);
      }
-     if (menu_num == 4){
+     if (menu_num == 4){  // level selection
        SDL_BlitSurface(select_lvl,NULL,screen,NULL);
      }
-     if (menu_num == 1){
+     if (menu_num == 1){  //game
        if (game_state == 0){
-	 /*global draw*/
 	 SDL_BlitSurface(fond,NULL,screen,NULL);
 	 SDL_BlitSurface(grass,NULL,screen,&rcgrass);
-	 
-	 /*draw menu*/
+
 	 for (i=0;i<4;i++){
 	   if (highlight_menu == i+1){
 	     SDL_BlitSurface(student_sprite_tab[i+4],NULL,screen,&menu_student_tab[i]);
@@ -241,7 +244,6 @@ int main ()
 	     SDL_BlitSurface(student_sprite_tab[i],NULL,screen,&menu_student_tab[i]);
 	   }
 	 }
-	 
 	 money_draw = current_level.money;
 	 i = 0;
 	 while (money_draw != 0){
@@ -299,7 +301,6 @@ int main ()
 	   i++;
 	 }
        }else{
-	 printf("game state:%d\n", game_state);
 	 if (game_state == 1){
 	   menu_num = 3;
 	   SDL_BlitSurface(victory, NULL, screen, NULL);

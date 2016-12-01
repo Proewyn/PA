@@ -15,7 +15,7 @@
 #define STUDENT_MAX 100
 #define PROJECTILE_MAX 50
 #define FPS 60
-#define NB_LEVELS 2
+#define NB_LEVELS 4
 
 /*structures*/
 
