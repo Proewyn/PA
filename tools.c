@@ -298,7 +298,7 @@ int in_range_z(int X, int Y){
   int beg = X*SIZE_SQUARE;
   int end = (X-current_level.field[Y][X].z.range)*SIZE_SQUARE;
   
-  while (i<STUDENT_MAX && current_level.student_tab[i].health !=0){
+  while (i<STUDENT_MAX && current_level.student_tab[i].type !=0){
     if (current_level.student_tab[i].posy == Y){
       if (current_level.student_tab[i].posx <= beg && current_level.student_tab[i].posx >= end){
 	if (distance > X*SIZE_SQUARE - current_level.student_tab[i].posx){
@@ -326,7 +326,7 @@ int impact(projectile p){
 
 void summon_student(student summon){
   int i=0;
-  while (i<STUDENT_MAX && current_level.student_tab[i].health !=0){ //look for free pos in tab
+  while (i<STUDENT_MAX && current_level.student_tab[i].type !=0){ //look for free pos in tab
     i++;
   }
   if (i<STUDENT_MAX-1){
@@ -410,7 +410,7 @@ void suppr_student(int num_student){
   for (i=num_student;i<STUDENT_MAX-1;i++){
     current_level.student_tab[i]=current_level.student_tab[i+1];
   }
-  current_level.student_tab[STUDENT_MAX-1].health = 0;
+  current_level.student_tab[STUDENT_MAX-1].type = 0;
 }
 
 int path_block(int num_student){
@@ -425,7 +425,7 @@ int path_block(int num_student){
 void move_student(){
   int i=0;
   double nextpos;
-  while (i<STUDENT_MAX && current_level.student_tab[i].health !=0 ){
+  while (i<STUDENT_MAX && current_level.student_tab[i].type !=0 ){
     if(current_level.student_tab[i].type!=4){
       if(in_range_s(current_level.student_tab[i]) == -1){
 	nextpos=current_level.student_tab[i].posx + current_level.student_tab[i].speed;
@@ -635,7 +635,7 @@ int etat(){
   }
   i=0;
   all_blocked=1;
-  while(current_level.student_tab[i].type!=0){
+  while(i<STUDENT_MAX && current_level.student_tab[i].type!=0){
     if(path_block(i)==0){
       all_blocked=0;
     }
@@ -668,7 +668,7 @@ void global_move(){
   }
   
   i=0;
-  while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
+  while (i<STUDENT_MAX && current_level.student_tab[i].type != 0){
     pos_attack = in_range_s(current_level.student_tab[i]);
     if (pos_attack != -1){
       if(SDL_GetTicks()-current_level.student_tab[i].last_hit >= current_level.student_tab[i].rate_of_fire*1000){
