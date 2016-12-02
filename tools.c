@@ -44,8 +44,8 @@ void HandleEvents(Input *in){
   if (in->mousebuttons[1]){
     in->mousebuttons[1]=0;
     if (menu_num == 0){  //main_menu
-      if(in->mousex > 470 && in->mousex < 675){
-	if(in->mousey > 385 && in->mousey < 412){
+      if(in->mousex > 418 && in->mousex < 661){
+	if(in->mousey > 404 && in->mousey < 470){
 	  menu_num = 4; 
 	  for(i=0;i<NB_LEVELS;i++){
 	    progress[i][0]=0;
@@ -53,55 +53,55 @@ void HandleEvents(Input *in){
 	  }
 	  save_progress();
 	}
-	if(in->mousey > 460 && in->mousey < 489){
+	if(in->mousey > 471 && in->mousey < 540){
 	  menu_num = 4;
 	}
-	if(in->mousey > 539 && in->mousey < 565){
+	if(in->mousey > 541 && in->mousey < 605){
 	  menu_num = 2;
 	}
-	if(in->mousey > 613 && in->mousey < 645){
+	if(in->mousey > 606 && in->mousey < 671){
 	  in->quit=1;
 	}
       }
     }
-    if (menu_num == 2){// bestiary
-      if(in->mousey > 683 && in->mousey < 700 && in->mousex > 50 && in->mousex < 195){
+    else if (menu_num == 2){// bestiary
+      if(in->mousey > 668 && in->mousey < 720 && in->mousex > 0 && in->mousex < 241){
 	menu_num = 0;
       }
     }
-    if (menu_num == 3){ //end of game screen
+    else if (menu_num == 3){ //end of game screen
       if (game_state == 1){ //victory
-	if(in->mousey > 605 && in->mousey < 630){
+	if(in->mousey > 588 && in->mousey < 671){
 
 	  /*save progression*/
 	  progress[num_selected_level-1][0]=1;
 	  progress[num_selected_level-1][1]=current_level.money;
 	  save_progress();
 
-	  if(in->mousex > 75 && in->mousex < 200){
+	  if(in->mousex > 218 && in->mousex < 491){
 	    menu_num = 4;
 	  }
-	  if(in->mousex > 900 && in->mousex < 990){
+	  if(in->mousex > 618 && in->mousex < 891){
 	    in->quit=1;
 	  }
 	}
       }else if(game_state == -1){ //defeat
-	if(in->mousey > 610 && in->mousey < 630){
+	if(in->mousey > 588 && in->mousey < 671){
 	  progress[num_selected_level-1][0]=0;
 	  progress[num_selected_level-1][1]=current_level.money;
 	  save_progress();
 
-	  if(in->mousex > 35 && in->mousex < 145){
+	  if(in->mousex > 218 && in->mousex < 491){
 	    menu_num = 4;
 	  }
-	  if(in->mousex > 945 && in->mousex < 1025){
+	  if(in->mousex > 618 && in->mousex < 891){
 	    in->quit=1;
 	  }
 	}
       }
     }
-    if (menu_num == 4){ //level_selection
-      if(in->mousex > 35 && in->mousex < 185 && in->mousey > 640 && in->mousey < 670){
+    else if (menu_num == 4){ //level_selection
+      if(in->mousex > 0 && in->mousex < 241 && in->mousey > 668 && in->mousey < 720){
 	menu_num = 0;
       }
       for(i=0;i<STUDENT_MAX;i++){
@@ -110,8 +110,10 @@ void HandleEvents(Input *in){
       for (i=0;i<PROJECTILE_MAX;i++){
 	current_level.projectile_tab[i].type=0;
       }
-      if(in->mousex > 360 && in->mousex < 444){
-	if(in->mousey > 192 && in->mousey < 210){
+      is_select = false;
+      highlight_menu = 0;
+      if(in->mousex > 418 && in->mousex < 661){
+	if(in->mousey > 404 && in->mousey < 470){
 	  init_level(1);
 	  num_selected_level = 1;
 	  init_zombie();
@@ -119,7 +121,7 @@ void HandleEvents(Input *in){
 	  menu_num = 1;
 	}
 	if(progress[0][0]==1){
-	  if(in->mousey > 237 && in->mousey < 253){
+	  if(in->mousey > 471 && in->mousey < 539){
 	    init_level(2);
 	    num_selected_level = 2;
 	    init_zombie();
@@ -128,7 +130,7 @@ void HandleEvents(Input *in){
 	  }
 	}
 	if(progress[1][0]==1){
-	  if(in->mousey > 277 && in->mousey < 300){
+	  if(in->mousey > 540 && in->mousey < 604){
 	    init_level(3);
 	    num_selected_level = 3;
 	    init_zombie();
@@ -137,7 +139,7 @@ void HandleEvents(Input *in){
 	  }
 	}
 	if(progress[2][0]==1){
-	  if(in->mousey > 322 && in->mousey < 344){
+	  if(in->mousey > 605 && in->mousey < 671){
 	    init_level(4);
 	    num_selected_level = 4;
 	    init_zombie();
@@ -147,11 +149,9 @@ void HandleEvents(Input *in){
 	}
       }
     }
-    if (menu_num == 1){  //game
-      if (in->mousey > 660 && in->mousey < 680 && in->mousex > 15 && in->mousex < 205){
+    else if (menu_num == 1){  //game
+      if (in->mousex > 0 && in->mousex < 241 && in->mousey > 668 && in->mousey < 720){
 	menu_num = 0;
-	is_select = false;
-	highlight_menu = 0;
       }
       if (in->mousey < BOTTOM_MENU){
 	highlight_menu = num_student_menu(in->mousex);
@@ -165,9 +165,9 @@ void HandleEvents(Input *in){
 	    student student_temp;
 	    if (highlight_menu == 1){
 	      student_temp.rate_of_fire = 1;
-	      student_temp.cost = 10;
-	      student_temp.health = 15;
-	      student_temp.damage = 2;
+	      student_temp.cost = 7;
+	      student_temp.health = 16;
+	      student_temp.damage = 1;
 	      student_temp.speed = 5;
 	      student_temp.range = 1;
 	      student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
@@ -175,10 +175,10 @@ void HandleEvents(Input *in){
 	      student_temp.last_hit = 0;
 	      student_temp.type = 1;
 	    }else if(highlight_menu == 2){
-	      student_temp.rate_of_fire = 2;
+	      student_temp.rate_of_fire = 3;
 	      student_temp.cost = 10;
 	      student_temp.health = 10;
-	      student_temp.damage = 12;
+	      student_temp.damage = 8;
 	      student_temp.speed = 3;
 	      student_temp.range = 3;
 	      student_temp.posx = (double)num_case_x(in->mousex)*SIZE_SQUARE;
@@ -186,8 +186,8 @@ void HandleEvents(Input *in){
 	      student_temp.last_hit = 0;
 	      student_temp.type = 2;
 	    }else if(highlight_menu == 3){
-	      student_temp.rate_of_fire = 5;
-	      student_temp.cost = 10;
+	      student_temp.rate_of_fire = 4;
+	      student_temp.cost = 13;
 	      student_temp.health = 7;
 	      student_temp.damage = 7;
 	      student_temp.speed = 1;
@@ -198,7 +198,7 @@ void HandleEvents(Input *in){
 	      student_temp.type = 3;
 	    }else if(highlight_menu == 4){
 	      student_temp.rate_of_fire = 5;
-	      student_temp.cost = 10;
+	      student_temp.cost = 5;
 	      student_temp.health = 1;
 	      student_temp.damage = 1;
 	      student_temp.speed = 2;
@@ -215,7 +215,6 @@ void HandleEvents(Input *in){
 	  }
 	}
       }
-      printf("%d %d\n", in->mousex, in->mousey);
     }
   }
 }
@@ -243,8 +242,8 @@ void init_zombie(){
       else if (current_level.field[j][i].z.type == 2){
 	current_level.field[j][i].z.rate_of_fire=2;
 	current_level.field[j][i].z.health=10;
-	current_level.field[j][i].z.damage=3;
-	current_level.field[j][i].z.range=3;
+	current_level.field[j][i].z.damage=5;
+	current_level.field[j][i].z.range=4;
 	current_level.field[j][i].z.last_hit=0;
       }
     }
@@ -642,7 +641,7 @@ int etat(){
     i++;
   }
   
-  if ((result == 0 && current_level.money<10 && current_level.student_tab[0].type == 0 && current_level.projectile_tab[0].type == 0) || (result == 0 && all_blocked==1 && current_level.money<10 && current_level.projectile_tab[0].type == 0)){
+  if ((result == 0 && current_level.money<5 && current_level.student_tab[0].type == 0 && current_level.projectile_tab[0].type == 0) || (result == 0 && all_blocked==1 && current_level.money<5 && current_level.projectile_tab[0].type == 0)){
     result = -1;
   }
 
@@ -659,7 +658,7 @@ void global_move(){
 	if (pos_attack != -1){
 	  if (SDL_GetTicks()-current_level.field[i][j].z.last_hit >= current_level.field[i][j].z.rate_of_fire*1000){
 	    current_level.field[i][j].z.last_hit = SDL_GetTicks();
-	    printf("zombie\n");
+	    printf("Attaque de Zombie\n");
 	    attack_z(pos_attack, j, i);
 	  }
 	}
@@ -674,10 +673,10 @@ void global_move(){
       if(SDL_GetTicks()-current_level.student_tab[i].last_hit >= current_level.student_tab[i].rate_of_fire*1000){
 	current_level.student_tab[i].last_hit = SDL_GetTicks();
 	if(current_level.student_tab[i].type==1){
-	  printf("cac\n");
+	  printf("Attaque d'Humain\n");
 	  attack(current_level.student_tab[i], pos_attack);
 	}else{
-	  printf("ranged\n");
+	  printf("Tir\n");
 	  launch_projectile(i);
 	}
       }

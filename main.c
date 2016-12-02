@@ -3,11 +3,11 @@
 
 /* definition of global variables*/
 
-SDL_Surface *grass,*fond, *barricade, *student_base, *zombie_sprite_tab[5], *student_sprite_tab[10], *projectile_sprite_tab[5], *number_tab[10], *defeat, *victory, *coin, *menu, *bestiaire, *select_lvl, *lock;
+SDL_Surface *grass,*fond, *barricade, *student_base, *zombie_sprite_tab[5], *student_sprite_tab[10], *projectile_sprite_tab[5], *number_tab[10], *defeat, *victory, *menu, *bestiaire, *select_lvl;
 
-SDL_Rect rcgrass, rcstudent_baserc, rczombie_base, rczombie_baserc, draw, menu_student_tab[5], rcchiffre, rccoin;
+SDL_Rect rcgrass, rcstudent_baserc, rczombie_base, rczombie_baserc, draw, menu_student_tab[5], rcchiffre;
 
-int colorkey, i, j, highlight_menu, game_state, money_draw, money_tab[4], menu_num=0;
+int colorkey, i, j, highlight_menu, game_state, money_draw, money_tab[3], menu_num=0;
 
 level current_level;
 
@@ -24,92 +24,84 @@ int main ()
   current_level.projectile_tab=(projectile*)malloc(PROJECTILE_MAX*sizeof(projectile));
   
   SDL_Init(SDL_INIT_VIDEO);
-  SDL_WM_SetCaption("Student versus Zombie", "Student versus Zombie");
+  SDL_WM_SetCaption("Monsters vs Humans", "Monsters vs Humans");
   SDL_Surface* screen = SDL_SetVideoMode(1080, 720, 0, 0);
   SDL_Surface *temp;
   Uint32 frame_time = 0;
   
  /*load element*/
- temp=SDL_LoadBMP("img/menu.bmp");
+ temp=SDL_LoadBMP("img/main42.bmp");
  menu=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/select_lvl.bmp");
+ temp=SDL_LoadBMP("img/niveau42.bmp");
  select_lvl=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/bestiaire.bmp");
+ temp=SDL_LoadBMP("img/bestiaire42.bmp");
  bestiaire=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/fond3.bmp");
+ temp=SDL_LoadBMP("img/grille42.bmp");
  grass=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/fond.bmp");
+ temp=SDL_LoadBMP("img/fond42.bmp");
  fond=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/barricade.bmp");
+ temp=SDL_LoadBMP("img/buche42.bmp");
  barricade=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/coin.bmp");
- coin=SDL_DisplayFormat(temp);
- SDL_FreeSurface(temp);
-
- temp=SDL_LoadBMP("img/victory.bmp");
+ temp=SDL_LoadBMP("img/victoire42.bmp");
  victory=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/defeat.bmp");
+ temp=SDL_LoadBMP("img/defaite42.bmp");
  defeat=SDL_DisplayFormat(temp);
- SDL_FreeSurface(temp);
-
- temp=SDL_LoadBMP("img/lock.bmp");
- lock=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
  
  /* load student*/
- temp=SDL_LoadBMP("img/student2.bmp");
+ temp=SDL_LoadBMP("img/peon42.bmp");
  student_sprite_tab[0]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
  
- temp=SDL_LoadBMP("img/archer2.bmp");
+ temp=SDL_LoadBMP("img/archer42.bmp");
  student_sprite_tab[1]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/mage2.bmp");
+ temp=SDL_LoadBMP("img/mage42.bmp");
  student_sprite_tab[2]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/nain2.bmp");
+ temp=SDL_LoadBMP("img/nain42.bmp");
  student_sprite_tab[3]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/student_select2.bmp");
+ temp=SDL_LoadBMP("img/peon_s42.bmp");
  student_sprite_tab[4]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/archer_select2.bmp");
+ temp=SDL_LoadBMP("img/archer_s42.bmp");
  student_sprite_tab[5]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/mage_select2.bmp");
+ temp=SDL_LoadBMP("img/mage_s42.bmp");
  student_sprite_tab[6]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/nain_select2.bmp");
+ temp=SDL_LoadBMP("img/nain_s42.bmp");
  student_sprite_tab[7]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
  
   
  /*load monster*/
- temp=SDL_LoadBMP("img/zombie.bmp");
+ temp=SDL_LoadBMP("img/zombie42.bmp");
  zombie_sprite_tab[1]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
  
- temp=SDL_LoadBMP("img/lich.bmp");
+ temp=SDL_LoadBMP("img/lich42.bmp");
  zombie_sprite_tab[2]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
@@ -118,7 +110,7 @@ int main ()
  projectile_sprite_tab[0]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
- temp=SDL_LoadBMP("img/fireball.bmp");
+ temp=SDL_LoadBMP("img/fireball42.bmp");
  projectile_sprite_tab[1]=SDL_DisplayFormat(temp);
  SDL_FreeSurface(temp);
 
@@ -172,18 +164,16 @@ int main ()
  SDL_SetColorKey(zombie_sprite_tab[2], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(student_sprite_tab[0], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(student_sprite_tab[1], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
- SDL_SetColorKey(student_sprite_tab[2], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 0, 249, 252));
- SDL_SetColorKey(student_sprite_tab[3], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 0, 254, 255));
+ SDL_SetColorKey(student_sprite_tab[2], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+ SDL_SetColorKey(student_sprite_tab[3], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(student_sprite_tab[4], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(student_sprite_tab[5], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
- SDL_SetColorKey(student_sprite_tab[6], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 0, 249, 252));
- SDL_SetColorKey(student_sprite_tab[7], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 0, 254, 255));
+ SDL_SetColorKey(student_sprite_tab[6], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+ SDL_SetColorKey(student_sprite_tab[7], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(projectile_sprite_tab[0], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 255, 255, 255));
- SDL_SetColorKey(projectile_sprite_tab[1], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 255, 255, 255));
+ SDL_SetColorKey(projectile_sprite_tab[1], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
  SDL_SetColorKey(projectile_sprite_tab[2], SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 255, 255, 255));
- SDL_SetColorKey(barricade, SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 255, 255, 255));
- SDL_SetColorKey(lock, SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 255, 255, 255));
- SDL_SetColorKey(coin, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+ SDL_SetColorKey(barricade, SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, 0, 255, 0));
  for (i = 0 ; i < 10 ; i++)
   {
     SDL_SetColorKey(number_tab[i], SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
@@ -202,11 +192,8 @@ int main ()
  /*init progress from save_file*/
  read_save();
 
- rccoin.x=30;
- rccoin.y=50;
-
- rcchiffre.x=70;
- rcchiffre.y=45;
+ rcchiffre.x=650;
+ rcchiffre.y=7;
  
  Input in;
  memset(&in, 0, sizeof(in));
@@ -247,19 +234,18 @@ int main ()
 	 money_draw = current_level.money;
 	 i = 0;
 	 while (money_draw != 0){
-	   money_tab[3-i]=money_draw%10;
+	   money_tab[2-i]=money_draw%10;
 	   money_draw = (int)money_draw/10;
 	   i++;
 	 }
-	 for (j=i; j<=3; j++){
-	   money_tab[3-j]=0;
+	 for (j=i; j<=2; j++){
+	   money_tab[2-j]=0;
 	 }
-	 SDL_BlitSurface(coin, NULL, screen, &rccoin);
-	 for (i=0; i<4; i++){
+	 for (i=0; i<3; i++){
 	   SDL_BlitSurface(number_tab[money_tab[i]], NULL, screen, &rcchiffre);
 	   rcchiffre.x = rcchiffre.x+30;
 	 }
-	 rcchiffre.x = 70;
+	 rcchiffre.x = 650;
 	 
 	 /*draw zombie*/
 	 for (j=0;j<FIELD_X;j++){
@@ -285,7 +271,7 @@ int main ()
 	 
 	 /*draw student*/
 	 i = 0;
-	 while (i<STUDENT_MAX && current_level.student_tab[i].health != 0){
+	 while (i<STUDENT_MAX && current_level.student_tab[i].type != 0){
 	   draw.y=140+(current_level.student_tab[i].posy)*SIZE_SQUARE;
 	   draw.x=80+current_level.student_tab[i].posx;
 	   SDL_BlitSurface(student_sprite_tab[current_level.student_tab[i].type-1], NULL, screen, &draw);
@@ -313,7 +299,44 @@ int main ()
      SDL_UpdateRect(screen, 0, 0, 0, 0);     
    }
  }
+ /*Free all image*/
+/*
+ for (i = 0 ; i < 10 ; i++){
+   SDL_FreeSurface(number_tab[i]);
+ }
+ for (i = 0 ; i < 3 ; i++){
+   SDL_FreeSurface(projectile_sprite_tab[i]);
+ }
+ for (i = 0 ; i < 2 ; i++){
+   SDL_FreeSurface(zombie_sprite_tab[i]);
+ }
+ for (i = 0 ; i < 8 ; i++){
+   SDL_FreeSurface(student_sprite_tab[i]);
+ }
+ SDL_FreeSurface(defeat);
+ SDL_FreeSurface(victory);
+ SDL_FreeSurface(barricade);
+ SDL_FreeSurface(fond);
+ SDL_FreeSurface(grass);
+ SDL_FreeSurface(bestiaire);
+ SDL_FreeSurface(select_lvl);
+ SDL_FreeSurface(menu);
  
+ for (j=0;j<FIELD_X;j++){
+	 for (i=0;i<FIELD_Y;i++){
+		free(current_level.field[i][j]);
+	 }
+ }
+ free(current_level.field);
+ for (i=0;i<STUDENT_MAX;i++){
+	 free(current_level.student_tab[i]);
+ }
+ free(current_level.student_tab);
+ for (i=0;i<PROJECTILE_MAX;i++){
+	 free(current_level.projectile_tab[i]);
+ }
+ free(current_level.projectile_tab);
+*/
  SDL_Quit();
  
  return EXIT_SUCCESS;
