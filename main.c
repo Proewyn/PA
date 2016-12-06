@@ -300,7 +300,7 @@ int main ()
    }
  }
  /*Free all image*/
-/*
+
  for (i = 0 ; i < 10 ; i++){
    SDL_FreeSurface(number_tab[i]);
  }
@@ -322,21 +322,16 @@ int main ()
  SDL_FreeSurface(select_lvl);
  SDL_FreeSurface(menu);
  
- for (j=0;j<FIELD_X;j++){
-	 for (i=0;i<FIELD_Y;i++){
-		free(current_level.field[i][j]);
-	 }
+ /*free all structures*/
+ for (i=0;i<FIELD_Y;i++){
+   free(current_level.field[i]);
  }
+ 
  free(current_level.field);
- for (i=0;i<STUDENT_MAX;i++){
-	 free(current_level.student_tab[i]);
- }
+
  free(current_level.student_tab);
- for (i=0;i<PROJECTILE_MAX;i++){
-	 free(current_level.projectile_tab[i]);
- }
+ 
  free(current_level.projectile_tab);
-*/
  SDL_Quit();
  
  return EXIT_SUCCESS;
